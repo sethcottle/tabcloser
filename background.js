@@ -32,7 +32,7 @@ chrome.alarms.onAlarm.addListener(() => {
     tabs.forEach((tab) => {
       setTimeout(() => {
         checkTab(tab);
-      }, 30000); // 30 seconds
+      }, 15000); // 15 seconds
     });
   });
 });
