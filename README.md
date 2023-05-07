@@ -57,7 +57,7 @@ Download the latest relase and unzip it. Then navigate to `edge://extensions/` a
 
 ## Support the Addon
 
-You can support me buy buying me a coffee! 🙂
+You can support me by buying me a coffee! 🙂
 
 [![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buymeacoffee.svg)](https://buymeacoffee.com/seth)
 
