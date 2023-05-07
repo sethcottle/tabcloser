@@ -3,41 +3,60 @@
 # TabCloser
 
 ## What is TabCloser?
-Tabcloser is an extension for Chromium browsers that periodically checks for commonly redirected tabs for <b>Figma</b> files, joining <b>Zoom</b> meetings, opening <b>Spotify</b> links, <b>VS Code Live Share</b> invitations, and <b>Discord</b> invites.
+Tabcloser is an extension for Chromium browsers that periodically checks for commonly redirected tabs for <b>Figma</b> files, joining <b>Zoom</b> meetings, opening <b>Spotify</b> links, <b>VS Code Live Share</b> invitations, and <b>Discord</b> invites to automatically close them.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
 ## TabCloser Options
 
-By default, Figma, Zoom, Spotify, VS Code Live Share, and Discord invites are enabled. Just deselect any service that you don't want tabs to close for automatically.
+By default, Figma, Zoom, Spotify, VS Code Live Share, and Discord invites are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser is checking your tabs to close them, by default it's `30 seconds`.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
-Let's breakdown how TabCloser decides if it should close a tab. TabCloser is looking for a partial match on a dedicated URL for each service.
+Let's breakdown how TabCloser decides if it should close a tab. TabCloser is using regular expressions to look for a partial match on a dedicated URL for each service.
+
+Here's how TabCloser is handling regular expressions:
+
+`^`: The start of the URL
+
+`https?://`: This will match "http://" or "https://"
+
+`([a-z0-9-]+\\.)?`: This isn't included in each service, but it's to detect a subdomain, followed by a dot "."
+
+`example\\.com/`: This matches the primary URL of a particular service
+
 
 #### Figma
-For Figma, TabCloser is looking for `figma.com/file/`. When you're sent a Figma link, ones that contain `/file/` is what is redirected to the Figma desktop client. TabCloser <b>will not</b> close `/files/` which is the logged in homepage and <b>will not</b> close tabs for Figma Community profiles, files, plugins, ..etc.
+For Figma, tabloser is using `^https?://figma\\.com/file/'`
+
+The `figma.com/file` designates it is a file URL, not a Community profile, template, plugin, ..etc. File URLs can be redirected to the Figma desktop client.
 
 #### Zoom
-For Zoom, TabCloser is looking for `zoom.us/j/`. The `/j/` is a join meeting link, which can be opened in the Zoom desktop client.
+For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$`
+
+The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `+#success` when a Zoom link is successfully redirected to the Zoom desktop client.
 
 #### Spotify
-For Spotify, TabCloser is looking for `open.spotify.com`. The `open.` is typically associated with opening a song, artist, playlist, ..etc which can be opened in the Spotify desktop client.
+For Spotify, TabCloser is using `^https?://open\\.spotify\\.com` 
+
+The `open\\.` portion is typically associated with opening a song, artist, playlist, ..etc which can be opened in the Spotify desktop client.
 
 #### VS Code Live Share
-For Live Share, TabCloser is looking for `vscode.dev/liveshare/`. The `/liveshare/` is associated with the Live Share URL which can be opened in the VS Code desktop client.
+For Live Share, TabCloser is using `^https?://vscode\\.dev/liveshare`. 
+
+The `/liveshare/` is associated with the Live Share URL which can be opened in the VS Code desktop client.
 
 #### Discord
-For Discord, TabCloser is looking for `discord.com/invite/`. The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
+For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
+
+The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
 
 ## Requested Permissions
 TabCloser requests a few permissions in the `manifest.json` file.
 
-`chrome.tabs` allows TabCloser to interact with Figma, Join Zoom, Spotify, VS Code Live Share, and Discord Invite tabs.
+`chrome.tabs` allows TabCloser to interact with Figma, Join Zoom, Spotify, VS Code Live Share, and Discord Invite tabs and close them.
 
-`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service in the options menu.
-
-`chrome.alarms` allows TabCloser to periodically run. TabCloser isn't <b>constantly</b> scanning your tabs, every 30 seconds TabCloser will do a tab scan to see if there are any relevant tabs, it'll close tabs within 15 seconds of that check.
+`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for checking tabs from the options menu.
 
 ## Installing TabCloser
 
