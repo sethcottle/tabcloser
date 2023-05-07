@@ -1,4 +1,4 @@
-<img src="https://cdn.cottle.cloud/tabcloser/tabcloser.gif" width="150">
+<img src="https://cdn.cottle.cloud/tabcloser/tabcloser.svg" width="150">
 
 # TabCloser
 
