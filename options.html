@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TabCloser Options</title>
     <style>
-    html {
+      html {
         color-scheme: light dark;
-    }
+      }
       body {
-        font-family: Arial, sans-serif;
         margin: 24px;
         font-size: 15px;
+        font-family: Arial, sans-serif;
       }
-    form {
-      font-size: 16px;
-      line-height: 24px; 
+
+      label {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 8px;
+        line-height: 18px;
+      }
+      input[type="number"] {
+      width: 100px;
+      height: 28px;
+      padding: 4px;
+      font-size: 15px;
+      font-weight: bold;
+      border: 1px solid;
+      text-indent: 8px;
+      border-radius: 4px;
     }
-    input[type=checkbox] {
-    transform: scale(1.2);
-  }
     </style>
   </head>
   <body>
-    <h1>TabCloser Options</h1>
+
+    <h2>TabCloser Options</h2>
     <p><b>Select which tabs you'd like to auto close.</b></p>
-    <form id="options-form">
-      <!-- Checkboxes will be generated here -->
-    </form>
+
+    <div id="url-options"></div>
+    <p><b>Update how often TabCloser should check your tabs.</b></p>
+    <label for="check-interval">
+      Interval (seconds):
+      <input type="number" id="check-interval" min="1" step="1">
+    </label>
     <script src="options.js"></script>
+    <br>
+
     <p><b><a href="https://www.buymeacoffee.com/seth" target="_blank">Buy Me A Coffee</a> | <a href="https://tabcloser.com" target="_blank">TabCloser.com</a></b></p>
     <p><b>Made By <a href="https://seth.social" target="_blank">Seth Cottle</a></b></p>
+
   </body>
 </html>
+

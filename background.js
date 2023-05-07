@@ -1,9 +1,24 @@
-const predefinedUrlPartials = [
-  'figma.com/file/',
-  'zoom.us/j/',
-  'open.spotify.com',
-  'vscode.dev/liveshare/',
-  'discord.com/invite/'
+const predefinedUrlPatterns = [
+  {
+    label: ' Zoom Joins',
+    pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$',
+  },
+  {
+    label: ' Figma Files',
+    pattern: '^https?://([a-z0-9-]+\\.)?figma\\.com/file/[^?]+\\?[^&]+&fuid=[^&]+',
+  },
+  {
+    label: ' Spotify',
+    pattern: '^https?://open\\.spotify\\.com',
+  },
+  {
+    label: ' Discord Invites',
+    pattern: '^https?://([a-z0-9-]+\\.)?discord\\.com/invite/',
+  },
+  {
+    label: ' VS Code Live Share',
+    pattern: '^https?://vscode\\.dev/liveshare',
+  },
 ];
 
 function shouldCloseTab(url) {
@@ -12,7 +27,10 @@ function shouldCloseTab(url) {
       if (!disabledUrls) {
         disabledUrls = [];
       }
-      const shouldClose = predefinedUrlPartials.some((partial) => url.includes(partial) && !disabledUrls.includes(partial));
+      const shouldClose = predefinedUrlPatterns.some(({ pattern }) => {
+        const regex = new RegExp(pattern, 'i');
+        return regex.test(url) && !disabledUrls.includes(pattern);
+      });
       resolve(shouldClose);
     });
   });
@@ -22,21 +40,36 @@ async function checkTab(tab) {
   const shouldClose = await shouldCloseTab(tab.url);
   if (shouldClose) {
     try {
-      chrome.tabs.remove(tab.id);
+      await new Promise((resolve, reject) => {
+        chrome.tabs.remove(tab.id, () => {
+          const err = chrome.runtime.lastError;
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
     } catch (error) {
-      console.log('Tab already closed or does not exist:', tab.id);
+      console.log(`Error closing tab with id ${tab.id}:`, error.message);
     }
   }
 }
 
-chrome.alarms.create({ periodInMinutes: 0.5 });
+function processTabs(tabs, index, interval) {
+  if (index >= tabs.length) {
+    setTimeout(() => {
+      chrome.tabs.query({}, (tabs) => processTabs(tabs, 0, interval));
+    }, interval * 1000);
+    return;
+  }
 
-chrome.alarms.onAlarm.addListener(() => {
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      setTimeout(() => {
-        checkTab(tab);
-      }, 15000); // 15 seconds
-    });
-  });
+  const tab = tabs[index];
+  checkTab(tab);
+  processTabs(tabs, index + 1, interval);
+}
+
+chrome.storage.sync.get(['interval'], ({ interval }) => {
+  interval = interval || 30;
+  chrome.tabs.query({}, (tabs) => processTabs(tabs, 0, interval));
 });
