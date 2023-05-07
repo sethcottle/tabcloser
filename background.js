@@ -5,7 +5,7 @@ const predefinedUrlPatterns = [
   },
   {
     label: ' Figma Files',
-    pattern: '^https?://([a-z0-9-]+\\.)?figma\\.com/file/[^?]+\\?[^&]+&fuid=[^&]+',
+    pattern: '^https?://figma\\.com/file/[^?]+\\?[^&]+&fuid=[^&]+',
   },
   {
     label: ' Spotify',
@@ -13,7 +13,7 @@ const predefinedUrlPatterns = [
   },
   {
     label: ' Discord Invites',
-    pattern: '^https?://([a-z0-9-]+\\.)?discord\\.com/invite/',
+    pattern: '^https?://discord\\.com/invite/',
   },
   {
     label: ' VS Code Live Share',
