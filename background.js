@@ -21,7 +21,11 @@ function shouldCloseTab(url) {
 async function checkTab(tab) {
   const shouldClose = await shouldCloseTab(tab.url);
   if (shouldClose) {
-    chrome.tabs.remove(tab.id);
+    try {
+      chrome.tabs.remove(tab.id);
+    } catch (error) {
+      console.log('Tab already closed or does not exist:', tab.id);
+    }
   }
 }
 
