@@ -3,7 +3,7 @@
 # TabCloser
 
 ## What is TabCloser?
-Tabcloser is an extension for Chromium browsers that periodically checks for commonly redirected tabs for <b>Figma</b> files, joining <b>Zoom</b> meetings, opening <b>Spotify</b> links, <b>VS Code Live Share</b> invitations, and <b>Discord</b> invites
+Tabcloser is an extension for Chromium browsers that periodically checks for commonly redirected tabs for <b>Figma</b> files, joining <b>Zoom</b> meetings, opening <b>Spotify</b> links, <b>VS Code Live Share</b> invitations, and <b>Discord</b> invites.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
@@ -42,8 +42,10 @@ TabCloser requests a few permissions in the `manifest.json` file.
 ## Installing TabCloser
 
 ![Google Chrome](https://cdn.cottle.cloud/tabcloser/chrome-soon.svg)
+
 ![Microsoft Edge](https://cdn.cottle.cloud/tabcloser/edge-soon.svg)
-[![Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
+
+[![Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download-release.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
 
 I'm working on getting TabCloser published in the Google Chrome Web Store and Microsoft Edge Add-ons Store. I'll update the buttons above when TabCloser is approved! Right now you can manually installed the latest GitHub release and upload it to Chrome or Edge yourself.
 
@@ -52,3 +54,10 @@ Download the latest release and unzip it. Then navigate to `chrome://extensions/
 
 #### For Edge
 Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+
+## Support the Addon
+
+You can support me buy buying me a coffee! 🙂
+
+[![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buymeacoffee.svg)](https://buymeacoffee.com/seth)
+
