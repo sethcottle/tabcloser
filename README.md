@@ -35,9 +35,9 @@ TabCloser requests a few permissions in the `manifest.json` file.
 
 `chrome.tabs` allows TabCloser to interact with Figma, Join Zoom, Spotify, VS Code Live Share, and Discord Invite tabs.
 
-`chrome.storage` allows TabCloser to save if you have `enabled` or `disabled` the auto close option for a particular service in the options menu.
+`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service in the options menu.
 
-`chrome.alarms` lets us periodically run TabCloser. TabCloser isn't <b>constantly</b> scanning your tabs, every 30 seconds TabCloser will do a tab scan to see if there are any relevant tabs, it'll close tabs within 15 seconds of that check.
+`chrome.alarms` allows TabCloser to periodically run. TabCloser isn't <b>constantly</b> scanning your tabs, every 30 seconds TabCloser will do a tab scan to see if there are any relevant tabs, it'll close tabs within 15 seconds of that check.
 
 ## Installing TabCloser
 
@@ -47,7 +47,7 @@ TabCloser requests a few permissions in the `manifest.json` file.
 
 [![Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download-release.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
 
-I'm working on getting TabCloser published in the Google Chrome Web Store and Microsoft Edge Add-ons Store. I'll update the buttons above when TabCloser is approved! Right now you can manually installed the latest GitHub release and upload it to Chrome or Edge yourself.
+I'm working on getting TabCloser published in the Google Chrome Web Store and Microsoft Edge Add-ons Store. I'll update the buttons above when TabCloser is approved! Right now you can manually install the latest GitHub release and upload it to Chrome or Edge yourself.
 
 #### For Chrome
 Download the latest release and unzip it. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
