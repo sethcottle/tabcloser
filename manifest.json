@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TabCloser",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Automatically close redirected Figma, Zoom, Spotify, VS Code Live Share, and Discord tabs.",
   "action": {
     "default_popup": "popup.html",

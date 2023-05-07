@@ -5,7 +5,7 @@ const predefinedUrlPatterns = [
   },
   {
     label: ' Figma Files',
-    pattern: '^https?://figma\\.com/file/[^?]+\\?[^&]+&fuid=[^&]+',
+    pattern: '^https?://figma\\.com/file/',
   },
   {
     label: ' Spotify',
