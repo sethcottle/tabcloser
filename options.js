@@ -56,22 +56,24 @@ function renderCheckboxes() {
 }
 
 function loadCheckInterval() {
-  chrome.storage.sync.get(['checkInterval'], ({ checkInterval }) => {
-    if (!checkInterval) {
-      checkInterval = 30;
+  chrome.storage.sync.get(['interval'], ({ interval }) => {
+    if (!interval) {
+      interval = 30;
     }
     const checkIntervalInput = document.getElementById('check-interval');
-    checkIntervalInput.value = checkInterval;
+    checkIntervalInput.value = interval;
+    console.log('Loaded check interval:', interval); // Added debug log
     checkIntervalInput.addEventListener('input', () => {
       const newValue = parseInt(checkIntervalInput.value, 10);
       if (newValue > 0) {
-        chrome.storage.sync.set({ checkInterval: newValue }, () => {
-          console.log('Check interval saved');
+        chrome.storage.sync.set({ interval: newValue }, () => {
+          console.log('Check interval saved:', newValue); // Added debug log
         });
       }
     });
   });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
   renderCheckboxes();
