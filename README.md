@@ -27,14 +27,14 @@ Here's how TabCloser is handling regular expressions:
 
 
 #### Figma
-For Figma, TabCloser is using `^https?://figma\\.com/file/'`
+For Figma, TabCloser is using `^https?://(?:www\.)?figma\.com/file/`
 
-The `figma.com/file` designates it is a file URL, not a Community profile, template, plugin, ..etc. File URLs can be redirected to the Figma desktop client.
+The `figma.com/file` designates it is a file URL. TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs can be redirected to the Figma desktop client.
 
 #### Zoom
 For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$`
 
-The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `+#success` when a Zoom link is successfully redirected to the Zoom desktop client.
+The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `#success` when a Zoom link is successfully redirected to the Zoom desktop client.
 
 #### Spotify
 For Spotify, TabCloser is using `^https?://open\\.spotify\\.com` 
@@ -75,8 +75,6 @@ Download the latest release and unzip it. Then navigate to `chrome://extensions/
 Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
 ## Support the Addon
-
-You can support me by buying me a coffee! 🙂
 
 [![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buymeacoffee.svg)](https://buymeacoffee.com/seth)
 
