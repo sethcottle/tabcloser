@@ -27,7 +27,7 @@ Here's how TabCloser is handling regular expressions:
 
 
 #### Figma
-For Figma, tabloser is using `^https?://figma\\.com/file/'`
+For Figma, TabCloser is using `^https?://figma\\.com/file/'`
 
 The `figma.com/file` designates it is a file URL, not a Community profile, template, plugin, ..etc. File URLs can be redirected to the Figma desktop client.
 
