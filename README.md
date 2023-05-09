@@ -3,13 +3,13 @@
 # TabCloser
 
 ## What is TabCloser?
-Tabcloser is an extension for Chromium browsers that periodically checks for commonly redirected tabs for <b>Figma</b> files, joining <b>Zoom</b> meetings, opening <b>Spotify</b> links, <b>VS Code Live Share</b> invitations, and <b>Discord</b> invites to automatically close them.
+Tabcloser is an extension for Chromium browsers that automatically closees redirected <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>VS Code Live Share</b>, and join sessions for <b>Webex</b> and <b>Zoom</b>.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
 ## TabCloser Options
 
-By default, Figma, Zoom, Spotify, VS Code Live Share, and Discord invites are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser is checking your tabs to close them, by default it's `30 seconds`.
+By default, Discord invites, Figma files, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
@@ -25,16 +25,15 @@ Here's how TabCloser is handling regular expressions:
 
 `example\\.com/`: This matches the primary URL of a particular service
 
+#### Discord
+For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
+
+The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
 
 #### Figma
 For Figma, TabCloser is using `^https?://(?:www\.)?figma\.com/file/`
 
 The `figma.com/file` designates it is a file URL. TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs can be redirected to the Figma desktop client.
-
-#### Zoom
-For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$`
-
-The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `#success` when a Zoom link is successfully redirected to the Zoom desktop client.
 
 #### Spotify
 For Spotify, TabCloser is using `^https?://open\\.spotify\\.com` 
@@ -46,10 +45,15 @@ For Live Share, TabCloser is using `^https?://vscode\\.dev/liveshare`.
 
 The `/liveshare/` is associated with the Live Share URL which can be opened in the VS Code desktop client.
 
-#### Discord
-For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
+#### Webex
+For Webex, TabCloser is using `^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice`. 
 
-The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
+The `webex\\.com/wbxmjs/joinservice` is associated with the join meeting URL which can be opened in the Webex desktop client.
+
+#### Zoom
+For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$`
+
+The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `#success` when a Zoom link is successfully redirected to the Zoom desktop client.
 
 ## Requested Permissions
 TabCloser requests a few permissions in the `manifest.json` file.
