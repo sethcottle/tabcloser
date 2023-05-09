@@ -1,7 +1,9 @@
+const debug = false;
+
 const predefinedUrlPatterns = [
   {
-    label: ' Zoom Joins',
-    pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$',
+    label: ' Discord Invites',
+    pattern: '^https?://discord\\.com/invite/',
   },
   {
     label: ' Figma Files',
@@ -12,12 +14,16 @@ const predefinedUrlPatterns = [
     pattern: '^https?://open\\.spotify\\.com',
   },
   {
-    label: ' Discord Invites',
-    pattern: '^https?://discord\\.com/invite/',
-  },
-  {
     label: ' VS Code Live Share',
     pattern: '^https?://vscode\\.dev/liveshare',
+  },
+  {
+    label: ' Webex Joins',
+    pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice',
+  },
+  {
+    label: ' Zoom Joins',
+    pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$',
   },
 ];
 
@@ -30,7 +36,9 @@ function saveOptions() {
     }
   });
   chrome.storage.sync.set({ disabledUrls }, () => {
-    console.log('Options saved');
+    if (debug) {
+      console.log('Options saved. Disabled URLs:', disabledUrls);
+    }
   });
 }
 
@@ -58,22 +66,22 @@ function renderCheckboxes() {
 function loadCheckInterval() {
   chrome.storage.sync.get(['interval'], ({ interval }) => {
     if (!interval) {
-      interval = 30;
+      interval = 15;
     }
     const checkIntervalInput = document.getElementById('check-interval');
     checkIntervalInput.value = interval;
-    console.log('Loaded check interval:', interval); // Added debug log
     checkIntervalInput.addEventListener('input', () => {
       const newValue = parseInt(checkIntervalInput.value, 10);
       if (newValue > 0) {
         chrome.storage.sync.set({ interval: newValue }, () => {
-          console.log('Check interval saved:', newValue); // Added debug log
+          if (debug) {
+            console.log('Check interval saved:', newValue);
+          }
         });
       }
     });
   });
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   renderCheckboxes();
