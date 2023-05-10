@@ -37,8 +37,13 @@ For Figma, TabCloser is using `^https?://(?:www\.)?figma\.com/file/`
 
 The `figma.com/file` designates it is a file URL. TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs can be redirected to the Figma desktop client.
 
+#### Notion
+For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true`
+
+The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
+
 #### Spotify
-For Spotify, TabCloser is using `^https?://open\\.spotify\\.com` 
+For Spotify, TabCloser is using `^https?://open\\.spotify\\.com`
 
 The `open\\.` portion is typically associated with opening a song, artist, playlist, ..etc which can be opened in the Spotify desktop client.
 
