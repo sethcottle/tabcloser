@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "TabCloser",
-  "version": "2.2.1",
-  "description": "Automatically close redirected Discord invites, Figma files, Spotify, VS Code Live Share, and join sessions for Webex and Zoom.",
+  "version": "2.2.2",
+  "description": "Automatically close redirected Discord invites, Figma files, Notion, Spotify, VS Code Live Share, and join sessions for Webex and Zoom.",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

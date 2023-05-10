@@ -10,6 +10,10 @@ const predefinedUrlPatterns = [
     pattern: '^https?://(?:www\.)?figma\.com/file/',
   },
   {
+    label: ' Notion',
+    pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true',
+  },
+  {
     label: ' Spotify',
     pattern: '^https?://open\\.spotify\\.com',
   },
