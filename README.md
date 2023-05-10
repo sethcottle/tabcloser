@@ -3,7 +3,7 @@
 # TabCloser
 
 ## What is TabCloser?
-Tabcloser is an extension for Chromium browsers that automatically closees redirected <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>VS Code Live Share</b>, and join sessions for <b>Webex</b> and <b>Zoom</b>.
+Tabcloser is an extension for Chromium browsers that automatically closes redirected <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>VS Code Live Share</b>, and join meeting sessions for <b>Webex</b> and <b>Zoom</b>.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
@@ -13,9 +13,11 @@ By default, Discord invites, Figma files, Spotify, VS Code Live Share, Webex Joi
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
+#### URL Schema
+
 Let's breakdown how TabCloser decides if it should close a tab. TabCloser is using regular expressions to look for a partial match on a dedicated URL for each service.
 
-Here's how TabCloser is handling regular expressions:
+Here's how TabCloser is handling URLs for each service:
 
 `^`: The start of the URL
 
@@ -58,9 +60,13 @@ The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link,
 ## Requested Permissions
 TabCloser requests a few permissions in the `manifest.json` file.
 
-`chrome.tabs` allows TabCloser to interact with Figma, Join Zoom, Spotify, VS Code Live Share, and Discord Invite tabs and close them.
+`chrome.tabs` allows TabCloser to interact with your tabs, giving it the ability to run when a new tab is detected and if a matched URL is found, close that tab automatically.
 
-`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for checking tabs from the options menu.
+`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for closing tabs from the options menu.
+
+#### Privacy
+
+TabCloser runs completely locally in your browser. It does not collect any analytics, it does not store any information about your tabs or browser history, it does not send any data back for processing or analysis. Your data is yours and yours alone. 
 
 ## Installing TabCloser
 
