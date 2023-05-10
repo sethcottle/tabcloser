@@ -3,7 +3,7 @@
 # TabCloser
 
 ## What is TabCloser?
-Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>Zoom</b> meetings, and <b>Webex</b> meetings—leaving you with a clean browser and a clear path to productivity.
+Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Zoom</b> meetings, and <b>Webex</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
