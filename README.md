@@ -3,13 +3,13 @@
 # TabCloser
 
 ## What is TabCloser?
-Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>Zoom</b> meetings, and <b>Webex</b> meetings—leaving you with a clean browser and a clear path to productivity.
+Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>Zoom</b> meetings, and <b>Webex</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
 ## TabCloser Options
 
-By default, Discord invites, Figma files, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
+By default, Discord invites, Figma files, Notion, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
