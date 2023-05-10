@@ -70,13 +70,13 @@ TabCloser runs completely locally in your browser. It does not collect any analy
 
 ## Installing TabCloser
 
-![Google Chrome](https://cdn.cottle.cloud/tabcloser/chrome-soon.svg)
+TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-ons Store, and available for manual download and installation.
 
-![Microsoft Edge](https://cdn.cottle.cloud/tabcloser/edge-soon.svg)
+[![Get on the Google Chrome Web Store](https://cdn.cottle.cloud/tabcloser/button-chrome.svg)](https://chrome.google.com/webstore/detail/tabcloser/ebhkgfbgbcaphagkjbiffhnfbmkkbadb?hl=en&authuser=0)
 
-[![Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download-release.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
+[![Get on the Microsoft Edge Store](https://cdn.cottle.cloud/tabcloser/button-edge.svg)](https://microsoftedge.microsoft.com/addons/detail/tabcloser/odipgobonaabhgghappnhfjimopchehg)
 
-I'm working on getting TabCloser published in the Google Chrome Web Store and Microsoft Edge Add-ons Store. I'll update the buttons above when TabCloser is approved! Right now you can manually install the latest GitHub release and upload it to Chrome or Edge yourself.
+[![Download the Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download-release.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
 
 #### For Chrome
 Download the latest release and unzip it. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
