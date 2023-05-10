@@ -3,7 +3,7 @@
 # TabCloser
 
 ## What is TabCloser?
-Tabcloser is an extension for Chromium browsers that automatically closes redirected <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>VS Code Live Share</b>, and join meeting sessions for <b>Webex</b> and <b>Zoom</b>.
+TabCloser is an extension for Chromium browsers that automatically closes redirected <b>Discord</b> invites, <b>Figma</b> files, <b>Spotify</b>, <b>VS Code Live Share</b>, and join meeting sessions for <b>Webex</b> and <b>Zoom</b>.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
