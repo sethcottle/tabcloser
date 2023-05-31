@@ -2,6 +2,8 @@
 
 # TabCloser
 
+[What is TabCloser?](https://github.com/sethcottle/tabcloser#what-is-tabcloser) | [TabCloser Options](https://github.com/sethcottle/tabcloser#tabcloser-options) | [URL Schemas](https://github.com/sethcottle/tabcloser#url-schema) | [Privacy and Permissions](https://github.com/sethcottle/tabcloser#requested-permissions) | [Installing TabCloser](https://github.com/sethcottle/tabcloser#installing-tabcloser)
+
 ## What is TabCloser?
 Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
