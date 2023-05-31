@@ -2,6 +2,10 @@ const debug = false;
 
 const predefinedUrlPatterns = [
   {
+    label: ' Asana',
+    pattern: '^https?://app\\.asana\\.com/-/desktop_app_link\\?.*',
+  },
+  {
     label: ' Discord Invites',
     pattern: '^https?://discord\\.com/invite/',
   },
