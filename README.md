@@ -5,7 +5,7 @@
 [What is TabCloser?](https://github.com/sethcottle/tabcloser#what-is-tabcloser) | [TabCloser Options](https://github.com/sethcottle/tabcloser#tabcloser-options) | [URL Schemas](https://github.com/sethcottle/tabcloser#url-schema) | [Privacy and Permissions](https://github.com/sethcottle/tabcloser#requested-permissions) | [Installing TabCloser](https://github.com/sethcottle/tabcloser#installing-tabcloser)
 
 ## What is TabCloser?
-Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
+Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Linear</b> <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
@@ -43,6 +43,11 @@ The `/invite/` is associated with a Discord invite which can be opened in the Di
 For Figma, TabCloser is using `^https?://(?:www\.)?figma\.com/file/`
 
 The `figma.com/file` designates it is a file URL. TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs can be redirected to the Figma desktop client.
+
+#### Linear
+For Linear, TabCloser is using `^https?://linear\\.app/.*\\?noRedirect=1$'`
+
+The `\\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
 
 #### Notion
 For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true`
