@@ -3,13 +3,13 @@
 # TabCloser
 
 ## What is TabCloser?
-Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
+Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
 ## TabCloser Options
 
-By default, Discord invites, Figma files, Notion, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
+By default, Asana, Discord invites, Figma files, Notion, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
@@ -26,6 +26,11 @@ Here's how TabCloser is handling URLs for each service:
 `([a-z0-9-]+\\.)?`: This isn't included in each service, but it's to detect a subdomain, followed by a dot "."
 
 `example\\.com/`: This matches the primary URL of a particular service
+
+#### Asana
+For Asana, TabCloser is using `^https?://app\\.asana\\.com/-/desktop_app_link\\?.*`. 
+
+The `app.asana.com/-/desktop_app_link?` designates that an Asana link is being redirected to the native Asana client. `.*` will match any string that follows the `?`.
 
 #### Discord
 For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
