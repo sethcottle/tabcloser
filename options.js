@@ -14,6 +14,10 @@ const predefinedUrlPatterns = [
     pattern: '^https?://(?:www\.)?figma\.com/file/',
   },
   {
+    label: ' Linear',
+    pattern: '^https?://linear\\.app/.*\\?noRedirect=1$',
+  },
+  {
     label: ' Notion',
     pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true',
   },
