@@ -5,13 +5,13 @@
 [What is TabCloser?](https://github.com/sethcottle/tabcloser#what-is-tabcloser) | [TabCloser Options](https://github.com/sethcottle/tabcloser#tabcloser-options) | [URL Schemas](https://github.com/sethcottle/tabcloser#url-schema) | [Privacy and Permissions](https://github.com/sethcottle/tabcloser#requested-permissions) | [Installing TabCloser](https://github.com/sethcottle/tabcloser#installing-tabcloser)
 
 ## What is TabCloser?
-Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Linear</b> <b>Notion</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
+Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Linear</b>, <b>Notion</b>, <b>Slack</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
 ![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
 
 ## TabCloser Options
 
-By default, Asana, Discord invites, Figma files, Notion, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
+By default, Asana, Discord invites, Figma files, Notion, Slack, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
 
@@ -53,6 +53,11 @@ The `\\?noRedirect=1$` designates that the URL was successfully redirected to th
 For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true`
 
 The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
+
+#### Slack
+For Slack, TabCloser is using `^https?://[a-z0-9-]+\\.slack\\.com/.*$`
+
+`[a-z0-9-]+` matches a combiation of letters, numbers, or hyphens, capturing subdomains.  `\\.slack\\.com/` is matching the `.slack.com/` portion of the URL. Lastly, the `.*$` at the end is to match anything that may follow, like `slack.com/archives/...`.
 
 #### Spotify
 For Spotify, TabCloser is using `^https?://open\\.spotify\\.com`

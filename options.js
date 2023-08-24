@@ -8,7 +8,7 @@
 
 // ProjectName is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Pplease see the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
 // GNU General Public License for more details. 
 
 
@@ -34,6 +34,10 @@ const predefinedUrlPatterns = [
   {
     label: ' Notion',
     pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true',
+  },
+  {
+    label: ' Slack',
+    pattern: '^https?://[a-z0-9-]+\\.slack\\.com/.*$',
   },
   {
     label: ' Spotify',

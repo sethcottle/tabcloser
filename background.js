@@ -35,6 +35,10 @@ const predefinedUrlPatterns = [
     pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true',
   },
   {
+    label: ' Slack',
+    pattern: '^https?://[a-z0-9-]+\\.slack\\.com/.*$',
+  },
+  {
     label: ' Spotify',
     pattern: '^https?://open\\.spotify\\.com',
   },

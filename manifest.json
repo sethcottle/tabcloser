@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "TabCloser",
-  "version": "2.5.0",
-  "description": "Automatically close tabs for Asana, Discord, Figma, Linear, Notion, Spotify, VS Code, Webex, and Zoom.",
+  "version": "2.6.0",
+  "description": "Automatically close tabs for Asana, Discord, Figma, Linear, Notion, Slack, Spotify, VS Code, Webex, and Zoom.",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
