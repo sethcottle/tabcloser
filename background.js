@@ -31,6 +31,10 @@ const predefinedUrlPatterns = [
     pattern: '^https?://linear\\.app/.*\\?noRedirect=1$',
   },
   {
+    label: ' Microsoft Teams',
+    pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*',
+  }
+  {
     label: ' Notion',
     pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true',
   },
