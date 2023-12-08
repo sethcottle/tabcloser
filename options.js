@@ -20,6 +20,10 @@ const predefinedUrlPatterns = [
     pattern: '^https?://app\\.asana\\.com/-/desktop_app_link\\?.*',
   },
   {
+    label: ' AWS IAM Access Authorization Successful',
+    pattern: '^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html',
+  },
+  {
     label: ' Discord Invites',
     pattern: '^https?://discord\\.com/invite/',
   },
