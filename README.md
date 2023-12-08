@@ -34,6 +34,13 @@ For Asana, TabCloser is using `^https?://app\\.asana\\.com/-/desktop_app_link\\?
 
 The `app.asana.com/-/desktop_app_link?` designates that an Asana link is being redirected to the native Asana client. `.*` will match any string that follows the `?`.
 
+#### AWS IAM Access Authorization
+For the "Authorization Successful" page of the AWS IAM identity sign
+in flow, TabCloser is using
+`^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html`
+
+It only matches on secure connections, as that page would never be served over a non-secure one. The domain `[a-z0-9-]+.awsapps.com` should capture any AWS organization (the subdomain), and the regex only matches on the `login-success.html` page to make sure login errors would not be hidden from you.
+
 #### Discord
 For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
 
