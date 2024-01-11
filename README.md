@@ -62,9 +62,10 @@ For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOp
 The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
 
 #### Slack
-For Slack, TabCloser is using `^https?://[a-z0-9-]+\\.slack\\.com/.*$`
+For Slack, TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.slack\\.com/.*$`
 
-`[a-z0-9-]+` matches a combiation of letters, numbers, or hyphens, capturing subdomains.  `\\.slack\\.com/` is matching the `.slack.com/` portion of the URL. Lastly, the `.*$` at the end is to match anything that may follow, like `slack.com/archives/...`.
+`(?!(app\\.slack\\.com|slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion, to match only if the string following does not match the patterns inside the group. `app\\.slack\\.com` excludes URLs starting with "app.slack.com" to make sure the web client can successfully stay open. 
+`slack\\.com` excludes the base Slack website. `.*\\/(customize|account|apps)(\\/|$)` and `.*\\/home(\\/|$)` exclude URLs containing '/customize/', '/account/', '/apps/' or `/home` either followed by a slash or the end of the string—this is to avoid TabCloser from closer in-browsers settings and config pages for Slack.
 
 #### Spotify
 For Spotify, TabCloser is using `^https?://open\\.spotify\\.com`
@@ -119,7 +120,7 @@ Download the latest relase and unzip it. Then navigate to `edge://extensions/` a
 
 ## License
 
-Copyright (C) 2023 Seth Cottle
+Copyright (C) 2023-2024 Seth Cottle
 
 This file is part of TabCloser.
 

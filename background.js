@@ -1,4 +1,4 @@
-// Copyright (C) 2023 Seth Cottle
+// Copyright (C) 2023-2024 Seth Cottle
 
 // This file is part of TabCloser.
 
@@ -17,6 +17,10 @@ const predefinedUrlPatterns = [
   {
     label: ' Asana',
     pattern: '^https?://app\\.asana\\.com/-/desktop_app_link\\?.*',
+  },
+  {
+    label: ' AWS IAM Access Auth Success',
+    pattern: '^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html',
   },
   {
     label: ' Discord Invites',
@@ -40,7 +44,7 @@ const predefinedUrlPatterns = [
   },
   {
     label: ' Slack',
-    pattern: '^https?://[a-z0-9-]+\\.slack\\.com/.*$',
+    pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.slack\\.com/.*$',
   },
   {
     label: ' Spotify',
