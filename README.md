@@ -56,6 +56,11 @@ For Linear, TabCloser is using `^https?://linear\\.app/.*\\?noRedirect=1$'`
 
 The `\\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
 
+#### Microsoft Teams
+For Microsoft Teams, TabCloser is using `^https?://teams\\.microsoft\\.com/dl/launcher/.*`
+
+The `teams\\.microsoft\\.com` matches the domain "teams.microsoft.com.". `/dl/launcher/` is looking for the Teams launcher page that givesm you the ability to download, use the web app, or launch in your current Teams install.
+
 #### Notion
 For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true`
 
