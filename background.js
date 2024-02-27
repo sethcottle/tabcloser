@@ -44,7 +44,7 @@ const predefinedUrlPatterns = [
   },
   {
     label: ' Slack',
-    pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.slack\\.com/.*$',
+    pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.slack\\.com/.*$',
   },
   {
     label: ' Spotify',
