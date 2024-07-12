@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TabCloser",
-  "version": "2.7.6",
+  "version": "3.0.0",
   "description": "Automatically close leftover tabs from services like Figma, Spotify, Zoom and other commonly redirected URLs.",
   "action": {
     "default_popup": "popup.html",
@@ -13,7 +13,8 @@
   },
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "background": {
     "service_worker": "background.js"

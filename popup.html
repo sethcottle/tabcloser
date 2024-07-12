@@ -16,58 +16,280 @@ GNU General Public License for more details.
 
 -->
 
-
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TabCloser</title>
+
     <style>
-      html {
-        color-scheme: light dark;
+      :root {
+          --bg-color: #ffffff;
+          --text-color: #333333;
+          --border-color: #e0e0e0;
+          --input-bg: #f5f5f5;
+          --button-gradient: linear-gradient(to right, #9584FF, #4B78FF);
+          --button-gradient-hover: linear-gradient(to right, #8A75FF, #3D69FF);
+          --button-text: #ffffff;
+          --checkbox-bg: #e0e0e0;
+          --checkbox-border: #b0b0b0;
       }
+  
+      @media (prefers-color-scheme: dark) {
+          :root {
+              --bg-color: #1e1e1e;
+              --text-color: #f0f0f0;
+              --border-color: #444444;
+              --input-bg: #2a2a2a;
+              --checkbox-bg: #444444;
+              --checkbox-border: #666666;
+          }
+      }
+  
       body {
-        width: 300px;
-        margin: 24px;
-        font-size: 15px;
-        font-family: Arial, sans-serif;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: var(--bg-color);
+          color: var(--text-color);
+          line-height: 1.6;
       }
+  
+      body.popup-body {
+          min-width: 400px;
+          width: 400px;
+          max-width: 100vw;
+          padding: 15px;
+          box-sizing: border-box;
+      }
+  
+      body.popup-body > * {
+          max-width: 100%;
+      }
+  
+      h1 {
+          color: var(--text-color);
+          margin-top: 8px;
+        }
 
-      label {
-        display: block;
-        font-size: 15px;
-        margin-bottom: 8px;
-        line-height: 18px;
-      }
-      input[type="number"] {
-      width: 100%;
-      height: 28px;
-      padding: 4px;
-      font-size: 15px;
-      font-weight: bold;
-      margin-top: 4px;
-      border: 1px solid;
-      text-indent: 8px;
-      border-radius: 4px;
+        h2 {
+          color: var(--text-color);
+          border-bottom: 2px solid var(--border-color);
+          padding-bottom: 10px;
+          margin-top: 32px;
+        }
+    
+          .option-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      vertical-align: middle;
     }
-    </style>
-  </head>
-  <body>
 
-    <h2>TabCloser Options</h2>
-    <p><b>Select which tabs you'd like to auto close.</b></p>
+    .label-container {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+    }
 
-    <div id="url-options"></div>
-    <p><b>How quickly should TabCloser close a tab after it's been opened?</b></p>
-    <label for="check-interval">
-      Close Time (seconds):
-      <input type="number" id="check-interval" min="1" step="1">
-      <p>+5 Second New Tab Buffer</p>
-    </label>
+    .option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .option label {
+        flex-grow: 1;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+  
+      #custom-url-form {
+          margin-top: 20px;
+          display: flex;
+          gap: 10px;
+      }
+  
+      #custom-url-list {
+          list-style-type: none;
+          padding: 0;
+      }
+  
+      #custom-url-list li {
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          background-color: var(--input-bg);
+          padding: 8px 12px;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+      }
+  
+      #custom-url-list li:hover {
+          transform: translateX(5px);
+      }
+  
+      #custom-url-list li span {
+          flex-grow: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+      }
+  
+      input[type="text"], input[type="number"] {
+          padding: 8px;
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+          background-color: var(--input-bg);
+          color: var(--text-color);
+          flex-grow: 1;
+      }
+  
+      button {
+          padding: 8px 15px;
+          background: var(--button-gradient);
+          color: var(--button-text);
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+  
+      button:hover {
+          background: var(--button-gradient-hover);
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+  
+      .remove-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0.7;
+          transition: opacity 0.3s ease;
+      }
+  
+      .remove-btn:hover {
+          opacity: 1;
+          background: none;
+      }
+  
+      .remove-btn svg {
+          width: 18px;
+          height: 18px;
+          fill: currentColor;
+      }
+  
+      #check-interval {
+          margin-bottom: 20px;
+          width: 60px;
+      }
+  
+      a {
+          color: #4B78FF;
+          text-decoration: none;
+          transition: all 0.3s ease;
+      }
+  
+      a:hover {
+          text-decoration: underline;
+          color: #9584FF;
+      }
+  
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--checkbox-bg);
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background: var(--button-gradient);
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(18px);
+    }
+
+    /* Ensure the slider doesn't stretch */
+    .option .switch,
+    #custom-url-list .switch {
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+    }
+  </style>
+  
+</head>
+<body class="popup-body">
+    <h1>TabCloser</h1>
+    
+    <h2>Default Options</h2>
+    <div id="default-options"></div>
+    
+    <h2>Custom URLs</h2>
+    <form id="custom-url-form">
+        <input type="text" id="custom-url" placeholder="Enter URL to close" required>
+        <button type="submit">Add URL</button>
+    </form>
+    <ul id="custom-url-list"></ul>
+    
+    <h2>Closure Settings</h2>
+    <div>
+        <label for="check-interval">Close Time (seconds):</label>
+        <input type="number" id="check-interval" min="1" value="15">
+        <br>
+        <a href="https://cottle.notion.site/Getting-Started-2959666010e64deabad75efa0aaeb814?pvs=25" target="_blank">Learn About Closure Settings</a>
+    </div>
+
+    <h2>Support TabCloser</h2>
+    <p>
+        <a href="https://www.buymeacoffee.com/seth" target="_blank">Buy Me A Coffee</a> | 
+        <a href="https://tabcloser.com" target="_blank">TabCloser.com</a>
+    </p>
+    <p>Made By <a href="https://seth.social" target="_blank">Seth Cottle</a></p>
+
     <script src="options.js"></script>
-    <br>
+</body>
 
-    <p><b><a href="https://www.buymeacoffee.com/seth" target="_blank">Buy Me A Coffee</a> | <a href="https://tabcloser.com" target="_blank">TabCloser.com</a></b></p>
-    <p><b>Made By <a href="https://seth.social" target="_blank">Seth Cottle</a></b></p>
+<script src="popup.js"></script>
 
-  </body>
 </html>
-
