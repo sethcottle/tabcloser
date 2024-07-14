@@ -9,9 +9,9 @@
 // TabCloser is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
-// GNU General Public License for more details. 
+// GNU General Public License for more details.
 
-const debug = true; // Set to true for debugging
+const debug = false; // Set to true for debugging
 
 const predefinedUrlPatterns = [
   { label: 'Asana', pattern: '^https?://app\\.asana\\.com/-/desktop_app_link\\?.*' },
@@ -34,99 +34,52 @@ async function shouldCloseTab(url) {
   const { disabledUrls = [], customUrls = [] } = await chrome.storage.sync.get(['disabledUrls', 'customUrls']);
   
   // Check predefined patterns
-  let matchedPattern = null;
   const shouldCloseDefault = predefinedUrlPatterns.some(({ pattern, label }) => {
     const regex = new RegExp(pattern, 'i');
     if (regex.test(url) && !disabledUrls.includes(pattern)) {
-      matchedPattern = label;
+      if (debug) console.log(`Should close (default): true (matched: ${label})`);
       return true;
     }
     return false;
   });
   
   // Check custom URLs (exact literal match)
-  const matchedCustomUrl = customUrls.find(({ url: customUrl, enabled }) => {
-    if (!enabled) return false;
-    return url === customUrl; // Exact, case-sensitive match
+  const shouldCloseCustom = customUrls.some(({ url: customUrl, enabled }) => {
+    if (enabled && url === customUrl) {
+      if (debug) console.log(`Should close (custom): true (matched: ${customUrl})`);
+      return true;
+    }
+    return false;
   });
   
-  const shouldCloseCustom = !!matchedCustomUrl;
-  
-  if (debug) {
-    console.log(`Checking URL: ${url}`);
-    if (shouldCloseDefault) {
-      console.log(`Should close (default): true (matched: ${matchedPattern})`);
-    } else if (shouldCloseCustom) {
-      console.log(`Should close (custom): true (matched: ${matchedCustomUrl.url})`);
-    } else {
-      console.log(`URL does not match any closing patterns`);
-    }
+  if (debug && !shouldCloseDefault && !shouldCloseCustom) {
+    console.log(`URL does not match any closing patterns: ${url}`);
   }
   
   return shouldCloseDefault || shouldCloseCustom;
 }
 
-async function checkAndCloseTabs() {
-  const tabs = await chrome.tabs.query({});
-  const { interval = 15 } = await chrome.storage.sync.get(['interval']);
-  
-  if (debug) {
-    console.log(`Checking ${tabs.length} tabs`);
-    console.log(`Closure interval: ${interval} seconds`);
-  }
-  
-  for (const tab of tabs) {
-    const shouldClose = await shouldCloseTab(tab.url);
-    if (shouldClose) {
-      if (debug) {
-        console.log(`Attempting to close tab: ${tab.url}`);
-      }
-      try {
-        await new Promise((resolve) => {
-          setTimeout(async () => {
-            try {
-              // Check if the tab still exists before attempting to close it
-              const tabExists = await chrome.tabs.get(tab.id).catch(() => null);
-              if (tabExists) {
-                await chrome.tabs.remove(tab.id);
-                if (debug) {
-                  console.log(`Successfully closed tab with id ${tab.id}`);
-                }
-              } else if (debug) {
-                console.log(`Tab with id ${tab.id} no longer exists`);
-              }
-            } catch (error) {
-              console.error(`Error closing tab with id ${tab.id}:`, error.message);
-            }
-            resolve();
-          }, interval * 1000);
-        });
-      } catch (error) {
-        console.error(`Unexpected error handling tab with id ${tab.id}:`, error.message);
-      }
+async function checkAndCloseTab(tabId, changeInfo, tab) {
+  if (changeInfo.status === 'complete') {
+    if (debug) console.log(`Tab updated: ${tab.url}`);
+    const { interval = 15 } = await chrome.storage.sync.get(['interval']);
+    
+    if (await shouldCloseTab(tab.url)) {
+      if (debug) console.log(`Scheduling tab for closure: ${tab.url}`);
+      setTimeout(async () => {
+        try {
+          await chrome.tabs.remove(tabId);
+          if (debug) console.log(`Closed tab: ${tab.url}`);
+        } catch (error) {
+          if (debug) console.error(`Error closing tab ${tab.url}: ${error.message}`);
+        }
+      }, interval * 1000);
     }
   }
 }
 
-// Run tab closer periodically
-chrome.alarms.create('runTabCloser', { periodInMinutes: 5 });
-
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'runTabCloser') {
-    if (debug) {
-      console.log('Running tab closer alarm');
-    }
-    checkAndCloseTabs();
-  }
-});
-
-// Listen for new tab creation
-chrome.tabs.onCreated.addListener(() => {
-  if (debug) {
-    console.log('New tab created, scheduling check');
-  }
-  setTimeout(() => checkAndCloseTabs(), 10000);
-});
+// Listen for tab updates
+chrome.tabs.onUpdated.addListener(checkAndCloseTab);
 
 // Service Worker initialization
 chrome.runtime.onInstalled.addListener(() => {
