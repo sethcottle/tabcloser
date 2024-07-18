@@ -7,7 +7,7 @@
 ## What is TabCloser?
 Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky leftover tabs from <b>Asana</b>, <b>Discord</b> invites, <b>Figma</b> files, <b>Linear</b>, <b>Notion</b>, <b>Slack</b>, <b>Spotify</b>, <b>VS Code Live Share</b>, <b>Webex</b> meetings, and <b>Zoom</b> meetings—leaving you with a clean browser and a clear path to productivity.
 
-![Tabs](https://cdn.cottle.cloud/tabcloser/tabs.svg)
+![Tabs](https://cdn.cottle.cloud/tabcloser/appslist.svg)
 
 ## TabCloser Options
 
@@ -19,7 +19,7 @@ By default, Asana, Discord invites, Figma, Notion, Slack, Spotify, VS Code Live 
 
 TabCloser 3 brings the ability to add custom URLs to the detection criteria. TabCloser <b>will only</b> close URLs that are an <b>exact match</b> to what is entered. That means if the URL is `https://example.com/` instead of `https://example.com`, TabCloser will not close the tab because the trailing `/` is missing from the end of the entry. The Custom URL options is great for closing out out specific pages you may use, like leftover tabs from SSO, VPN, ..etc redirect pages.
 
-![TabCloser Custom URL](https://cdn.cottle.cloud/tabcloser/custom-url.png)
+![TabCloser Custom URL](https://cdn.cottle.cloud/tabcloser/custom-urls.svg)
 
 #### URL Schema
 
