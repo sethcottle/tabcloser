@@ -35,6 +35,8 @@ GNU General Public License for more details.
           --checkbox-bg: #e0e0e0;
           --checkbox-border: #b0b0b0;
           --svg-color: #333333; 
+          --link-color: #3D69FF;
+          --link-hover-color: #8A75FF;
       }
   
       @media (prefers-color-scheme: dark) {
@@ -46,6 +48,8 @@ GNU General Public License for more details.
               --checkbox-bg: #444444;
               --checkbox-border: #666666;
               --svg-color: #f0f0f0;
+              --link-color: #ADB4FF;
+              --link-hover-color: #DBDEFF;
           }
       }
   
@@ -223,14 +227,14 @@ GNU General Public License for more details.
       }
   
       a {
-          color: #4B78FF;
+          color: var(--link-color);
           text-decoration: none;
           transition: all 0.3s ease;
       }
   
       a:hover {
           text-decoration: underline;
-          color: #9584FF;
+          color: var(--link-hover-color);
       }
   
       .switch {
@@ -306,7 +310,6 @@ GNU General Public License for more details.
     <div>
         <input type="number" id="check-interval" min="1" value="15"> <label for="check-interval"> Seconds
     </div>
-
     
     Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tabcloser.com" target="_blank">TabCloser.com</a>
 
