@@ -1,6 +1,6 @@
 <img src="https://cdn.cottle.cloud/tabcloser/tabcloser.svg" width="150">
 
-# TabCloser
+# TabCloser 3
 
 [What is TabCloser?](https://github.com/sethcottle/tabcloser#what-is-tabcloser) | [TabCloser Options](https://github.com/sethcottle/tabcloser#tabcloser-options) | [URL Schemas](https://github.com/sethcottle/tabcloser#url-schema) | [Privacy and Permissions](https://github.com/sethcottle/tabcloser#requested-permissions) | [Installing TabCloser](https://github.com/sethcottle/tabcloser#installing-tabcloser) | [License](https://github.com/sethcottle/tabcloser#license)
 
@@ -11,9 +11,15 @@ Keep your tabs tidy, so you can stay focused. TabCloser eliminates those pesky l
 
 ## TabCloser Options
 
-By default, Asana, Discord invites, Figma files, Notion, Slack, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds` + `5 second new tab buffer` = `20 seconds`. The New Tab Buffer ensures TabCloser has enough time to detect a new tab and a URL if you're manually copy + pasting a link into a new tab.
+By default, Asana, Discord invites, Figma, Notion, Slack, Spotify, VS Code Live Share, Webex Joins, and Zoom Joins are enabled. Just deselect any service that you don't want tabs to close for automatically. You can also change the interval that TabCloser uses to close a new tab once a new tab has been opened, by default it's `15 seconds`.
 
 ![TabCloser Options](https://cdn.cottle.cloud/tabcloser/options.svg)
+
+#### Custom URLs
+
+TabCloser 3 brings the ability to add custom URLs to the detection criteria. TabCloser <b>will only</b> close URLs that are an <b>exact match</b> to what is entered. That means if the URL is `https://example.com/` instead of `https://example.com`, TabCloser will not close the tab because the trailing `/` is missing from the end of the entry. The Custom URL options is great for closing out out specific pages you may use, like leftover tabs from SSO, VPN, ..etc redirect pages.
+
+![TabCloser Custom URL](https://cdn.cottle.cloud/tabcloser/custom-url.png)
 
 #### URL Schema
 
@@ -47,9 +53,9 @@ For Discord, TabCloser is using `^https?://discord\\.com/invite/`.
 The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
 
 #### Figma
-For Figma, TabCloser is using `^https?://(?:www\.)?figma\.com/file/`
+For Figma, TabCloser is using three patterns: `^https?://(?:www\.)?figma\.com/design/` for Figma Design files, `^https?://(?:www\.)?figma\.com/board/` for FigJam files, and `^https?://(?:www\.)?figma\.com/slides/` for Figma Slide files (note that TabCloser will not close `/presentation/` files from shared Slide presentations).
 
-The `figma.com/file` designates it is a file URL. TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs can be redirected to the Figma desktop client.
+TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs which can be redirected to the Figma desktop client.
 
 #### Linear
 For Linear, TabCloser is using `^https?://linear\\.app/.*\\?noRedirect=1$'`
@@ -117,6 +123,9 @@ Download the latest release and unzip it. Then navigate to `chrome://extensions/
 
 #### For Edge
 Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+
+### For Safari
+`TabCloser.3.for.Safari.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
 
 ## Support the Addon
 
