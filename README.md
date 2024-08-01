@@ -93,9 +93,9 @@ For Webex, TabCloser is using `^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/join
 The `webex\\.com/wbxmjs/joinservice` is associated with the join meeting URL which can be opened in the Webex desktop client.
 
 #### Zoom
-For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$`
+For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/[js]/[^/]+.*#success$`
 
-The `([a-z0-9-]+\\.)?` and looking for `zoom\\.us/j/` as a designated join link, and then looking for `#success` when a Zoom link is successfully redirected to the Zoom desktop client.
+`([a-z0-9-]+\\.)?` matches to any subdomain that your Zoom may be using. `zoom\\.us/` matches the core URL. `[js]/` matches the `/j/` and `/s/` paths that the redirect URL may encounter. `[^/]+` matches the meeting ID. `.*` matches anything between the meeting ID and `#success`, this accounts for things like a `pwd` being included in the URL. And of course, `#success$` matches the "#success" at the end of URL that has been successfully redirected to the Zoom client.
 
 ## Requested Permissions
 TabCloser requests a few permissions in the `manifest.json` file.
@@ -125,7 +125,7 @@ Download the latest release and unzip it. Then navigate to `chrome://extensions/
 Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
 ### For Safari
-`TabCloser.3.for.Safari.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
+`tabcloser-3.2.2-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
 
 ## Support the Addon
 
