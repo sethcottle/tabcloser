@@ -112,11 +112,14 @@ TabCloser runs completely locally in your browser. It does not collect any analy
 
 TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-ons Store, and available for manual download and installation.
 
-[![Get on the Google Chrome Web Store](https://cdn.cottle.cloud/tabcloser/button-chrome.svg)](https://chrome.google.com/webstore/detail/tabcloser/ebhkgfbgbcaphagkjbiffhnfbmkkbadb?hl=en&authuser=0)
+[![Get on the Google Chrome Web Store](https://cdn.cottle.cloud/tabcloser/buttons/button-webstore.svg)](https://chrome.google.com/webstore/detail/tabcloser/ebhkgfbgbcaphagkjbiffhnfbmkkbadb?hl=en&authuser=0)
 
-[![Get on the Microsoft Edge Store](https://cdn.cottle.cloud/tabcloser/button-edge.svg)](https://microsoftedge.microsoft.com/addons/detail/tabcloser/odipgobonaabhgghappnhfjimopchehg)
+[![Get on the Microsoft Edge Store](https://cdn.cottle.cloud/tabcloser/buttons/button-edge.svg)](https://microsoftedge.microsoft.com/addons/detail/tabcloser/odipgobonaabhgghappnhfjimopchehg)
 
-[![Download the Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/download-release.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
+[![Get on the macOS App Store](https://cdn.cottle.cloud/tabcloser/buttons/button-macos.svg)](https://apps.apple.com/us/app/tabcloser-3/id6553966600?mt=12)
+
+[![Download the Latest GitHub Release](https://cdn.cottle.cloud/tabcloser/buttons/button-latest.svg)](https://github.com/sethcottle/tabcloser/zipball/main)
+
 
 #### For Chrome
 Download the latest release and unzip it. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
@@ -124,18 +127,20 @@ Download the latest release and unzip it. Then navigate to `chrome://extensions/
 #### For Edge
 Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
-### For Safari
+#### For Safari
 `tabcloser-3.2.2-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
 
 ## Support the Addon
 
-[![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buymeacoffee.svg)](https://buymeacoffee.com/seth)
+[![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buttons/button-bmac.svg)](https://buymeacoffee.com/seth)
+
+[![PayPal](https://cdn.cottle.cloud/tabcloser/buttons/button-paypal.svg)](https://www.paypal.com/paypalme/sethcottle)
+
+[![GitHub Sponsors](https://cdn.cottle.cloud/tabcloser/buttons/button-ghs.svg)](https://github.com/sponsors/sethcottle)
 
 ## License
 
 Copyright (C) 2023-2024 Seth Cottle
-
-This file is part of TabCloser.
 
 TabCloser is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
