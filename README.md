@@ -125,7 +125,7 @@ TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-on
 Download the latest release and unzip it. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
 #### For Edge
-Download the latest relase and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+Download the latest release and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
 #### For Safari
 `tabcloser-3.2.2-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
