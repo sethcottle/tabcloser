@@ -21,6 +21,7 @@ TabCloser 3 brings the ability to add custom URLs to the detection criteria. Tab
 
 ![TabCloser Custom URL](https://cdn.cottle.cloud/tabcloser/custom-urls.svg)
 
+
 #### URL Schema
 
 Let's breakdown how TabCloser decides if it should close a tab. TabCloser is using regular expressions to look for a partial match on a dedicated URL for each service.
@@ -34,6 +35,7 @@ Here's how TabCloser is handling URLs for each service:
 `([a-z0-9-]+\\.)?`: This isn't included in each service, but it's to detect a subdomain, followed by a dot "."
 
 `example\\.com/`: This matches the primary URL of a particular service
+
 
 #### Asana
 For Asana, TabCloser is using `^https?://app\\.asana\\.com/-/desktop_app_link\\?.*`. 
@@ -97,12 +99,13 @@ For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/[js]/[^/]+.*#s
 
 `([a-z0-9-]+\\.)?` matches to any subdomain that your Zoom may be using. `zoom\\.us/` matches the core URL. `[js]/` matches the `/j/` and `/s/` paths that the redirect URL may encounter. `[^/]+` matches the meeting ID. `.*` matches anything between the meeting ID and `#success`, this accounts for things like a `pwd` being included in the URL. And of course, `#success$` matches the "#success" at the end of URL that has been successfully redirected to the Zoom client.
 
+
 ## Requested Permissions
 TabCloser requests a few permissions in the `manifest.json` file.
 
-`chrome.tabs` allows TabCloser to interact with your tabs, giving it the ability to run when a new tab is detected and if a matched URL is found, close that tab automatically.
+`tabs` allows TabCloser to interact with your tabs, giving it the ability to run when a new tab is detected and if a matched URL is found, close that tab automatically.
 
-`chrome.storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for closing tabs from the options menu.
+`storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for closing tabs from the options menu.
 
 #### Privacy
 
@@ -132,11 +135,19 @@ Download the latest release and unzip it. Then navigate to `edge://extensions/` 
 
 ## Support the Addon
 
+You can support TabCloser by contributing through these links:
+
 [![Buy Me A Coffee](https://cdn.cottle.cloud/tabcloser/buttons/button-bmac.svg)](https://buymeacoffee.com/seth)
 
 [![PayPal](https://cdn.cottle.cloud/tabcloser/buttons/button-paypal.svg)](https://www.paypal.com/paypalme/sethcottle)
 
 [![GitHub Sponsors](https://cdn.cottle.cloud/tabcloser/buttons/button-ghs.svg)](https://github.com/sponsors/sethcottle)
+
+Signing up through these services through these affiliate links is also a good way to support TabCloser.
+
+[![Try DigitalOcean](https://cdn.cottle.cloud/tabcloser/buttons/button-do.svg)](https://m.do.co/c/632b45e20266)
+
+[![Try Fathom Analytics](https://cdn.cottle.cloud/tabcloser/buttons/button-fa.svg)](https://usefathom.com/ref/EQVZMV)
 
 ## License
 
