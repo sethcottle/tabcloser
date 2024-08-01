@@ -27,8 +27,7 @@ const predefinedUrlPatterns = [
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com', icon: 'spotify.svg'},
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare', icon: 'code.svg'},
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice', icon: 'webex.svg'},
-  { label: 'Zoom Joins', pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$', icon: 'zoom.svg'},
-];
+  { label: 'Zoom Joins', pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/[js]/[^/]+.*#success$', icon: 'zoom.svg'},];
 
 function saveOptions() {
   const disabledUrls = [];

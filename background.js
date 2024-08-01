@@ -27,7 +27,7 @@ const predefinedUrlPatterns = [
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com' },
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare' },
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice' },
-  { label: 'Zoom Joins', pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/j/[^/]+#success$' },
+  { label: 'Zoom Joins', pattern: '^https?://([a-z0-9-]+\\.)?zoom\\.us/[js]/[^/]+.*#success$' },
 ];
 
 async function shouldCloseTab(url) {
