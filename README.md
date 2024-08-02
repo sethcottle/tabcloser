@@ -105,7 +105,7 @@ TabCloser requests a few permissions in the `manifest.json` file.
 
 `tabs` allows TabCloser to interact with your tabs, giving it the ability to run when a new tab is detected and if a matched URL is found, close that tab automatically.
 
-`storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service and saves the interval you've set for closing tabs from the options menu.
+`storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service, saves custom URLs you enter, and saves the interval you've set for closing tabs from the options menu.
 
 #### Privacy
 
