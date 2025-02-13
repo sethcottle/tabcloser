@@ -75,9 +75,26 @@ For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOp
 The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
 
 #### Slack
-For Slack, TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.slack\\.com/.*$`
+Slack is a little more complicated that our typical regex patterns. TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)`
 
-`(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion, that specifies what should not follow the previous part of the regex. `app\\.slack\\.com` excludes URLs starting with "app.slack.com" to make sure the web client can successfully stay open. `slack\\.com` excludes the base Slack website. `.*\\/(customize|account|apps)(\\/|$)`, `api\\.slack\\.com` excludes URLs starting with "api.slack.com", `.*\\/home(\\/|$)` exclude URLs containing '/customize/', '/account/', '/apps/' or `/home` either followed by a slash or the end of the string—this is to avoid TabCloser from closer in-browsers settings and config pages for Slack.
+`(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion that excludes several important Slack URLs:
+- `app\\.slack\\.com` keeps the web client open
+- `slack\\.com` excludes the base Slack website
+- `api\\.slack\\.com` excludes developer docs
+- `.*\\/(customize|account|apps)(\\/|$)` excludes settings and configuration pages
+- `.*\\/home(\\/|$)` excludes the home page
+
+`[a-z0-9-]+\\.(enterprise\\.)?slack\\.com` matches both regular Slack workspaces (like `team.slack.com`) and enterprise workspaces (like `company.enterprise.slack.com`).
+
+TabCloser should close redirected tabs from:
+- Regular workspace redirects to the desktop app
+- Enterprise SSO sign-in redirects (like `company.enterprise.slack.com/ssb/signin_redirect`)
+
+TabCloser shouldn't close:
+- The Slack web client (app.slack.com)
+- Settings or configuration pages
+- The workspace home page
+- The main Slack website or docs
 
 #### Spotify
 For Spotify, TabCloser is using `^https?://open\\.spotify\\.com`
