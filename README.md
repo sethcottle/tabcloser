@@ -150,6 +150,8 @@ Download the latest release and unzip it. Then navigate to `edge://extensions/` 
 #### For Safari
 `tabcloser-3.2.2-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
 
+---
+
 ## Support the Addon
 
 You can support TabCloser by contributing through these links:
@@ -165,6 +167,16 @@ Signing up through these services through these affiliate links is also a good w
 [![Try DigitalOcean](https://cdn.cottle.cloud/tabcloser/buttons/button-do.svg)](https://m.do.co/c/632b45e20266)
 
 [![Try Fathom Analytics](https://cdn.cottle.cloud/tabcloser/buttons/button-fa.svg)](https://usefathom.com/ref/EQVZMV)
+
+---
+
+## 🆕 Stay Connected
+
+Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get updates on LittleLink and more. Use the invite code `PrAEQFF2fK` or click the button below.
+
+[![Discord](https://cdn.cottle.cloud/tabcloser/buttons/button-discord.svg)](https://discord.gg/PrAEQFF2fK)
+
+---
 
 ## License
 
