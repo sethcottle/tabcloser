@@ -1,7 +1,6 @@
-
 <!-- 
   
-Copyright (C) 2023-2024 Seth Cottle
+Copyright (C) 2023-2025 Seth Cottle
 
 This file is part of TabCloser.
 
@@ -64,8 +63,8 @@ GNU General Public License for more details.
       }
   
       body.popup-body {
-          min-width: 400px;
-          width: 400px;
+          min-width: 450px;
+          width: 450px;
           max-width: 100vw;
           padding: 15px;
           box-sizing: border-box;
@@ -115,8 +114,71 @@ GNU General Public License for more details.
   
       #custom-url-form {
           margin-top: 20px;
+      }
+
+      .url-input-container {
           display: flex;
           gap: 10px;
+          margin-bottom: 15px;
+      }
+
+      .url-type-selector {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 15px;
+          padding: 10px;
+          background-color: var(--input-bg);
+          border-radius: 4px;
+      }
+
+      .radio-option {
+          display: flex;
+          flex-direction: column;
+          cursor: pointer;
+      }
+
+      .radio-option input[type="radio"] {
+          margin-right: 8px;
+          align-self: flex-start;
+      }
+
+      .radio-label {
+          font-weight: 500;
+          margin-bottom: 2px;
+      }
+
+      .radio-option small {
+          color: var(--text-color);
+          opacity: 0.7;
+          margin-left: 20px;
+      }
+
+      .regex-help {
+          background-color: var(--input-bg);
+          padding: 10px;
+          border-radius: 4px;
+          border-left: 3px solid #7b1fa2;
+          margin-bottom: 15px;
+      }
+
+      .regex-help h4 {
+          margin-top: 0;
+          margin-bottom: 8px;
+          color: var(--text-color);
+      }
+
+      .regex-help ul {
+          margin: 8px 0;
+          padding-left: 20px;
+      }
+
+      .regex-help code {
+          background-color: var(--border-color);
+          padding: 2px 4px;
+          border-radius: 2px;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 12px;
       }
   
       #custom-url-list {
@@ -124,26 +186,66 @@ GNU General Public License for more details.
           padding: 0;
       }
   
-      #custom-url-list li {
-          margin-bottom: 10px;
+      .custom-url-item {
           display: flex;
           align-items: center;
           gap: 15px;
           background-color: var(--input-bg);
-          padding: 8px 12px;
+          padding: 12px;
           border-radius: 4px;
+          margin-bottom: 10px;
           transition: all 0.3s ease;
       }
   
-      #custom-url-list li:hover {
+      .custom-url-item:hover {
           transform: translateX(5px);
       }
-  
-      #custom-url-list li span {
+
+      .url-container {
+          display: flex;
+          align-items: center;
+          gap: 8px;
           flex-grow: 1;
+          min-width: 0;
+      }
+
+      .type-indicator {
+          font-size: 10px;
+          padding: 2px 6px;
+          border-radius: 12px;
+          font-weight: 600;
+          text-transform: uppercase;
+          white-space: nowrap;
+      }
+
+      .type-indicator.exact {
+          background-color: #e3f2fd;
+          color: #1976d2;
+      }
+
+      .type-indicator.regex {
+          background-color: #f3e5f5;
+          color: #7b1fa2;
+      }
+
+      @media (prefers-color-scheme: dark) {
+          .type-indicator.exact {
+              background-color: #1976d2;
+              color: #e3f2fd;
+          }
+          
+          .type-indicator.regex {
+              background-color: #7b1fa2;
+              color: #f3e5f5;
+          }
+      }
+
+      .url-text {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 13px;
       }
   
       input[type="text"], input[type="number"] {
@@ -301,8 +403,34 @@ GNU General Public License for more details.
     
     <h2>Custom URLs</h2>
     <form id="custom-url-form">
-        <input type="text" id="custom-url" placeholder="Enter URL to close" required>
-        <button type="submit">Add URL</button>
+        <div class="url-input-container">
+            <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
+            <button type="submit">Add URL</button>
+        </div>
+        
+        <div class="url-type-selector">
+            <label class="radio-option">
+                <input type="radio" name="url-type" id="url-type-exact" value="exact" checked>
+                <span class="radio-label">Exact Match</span>
+                <small>Matches the URL exactly as entered</small>
+            </label>
+            
+            <label class="radio-option">
+                <input type="radio" name="url-type" id="url-type-regex" value="regex">
+                <span class="radio-label">Regular Expression</span>
+                <small>Matches URLs using regex pattern</small>
+            </label>
+        </div>
+        
+        <div class="regex-help" id="regex-help" style="display: none;">
+            <h4>Common Regex Patterns:</h4>
+            <ul>
+                <li><code>^https?://localhost:\\d+/.*</code> - Any localhost with port</li>
+                <li><code>^https?://.*\\.example\\.com/.*</code> - Any subdomain of example.com</li>
+                <li><code>^https?://.*\\.zoom\\.us/j/\\d+.*#success$</code> - Zoom success pages</li>
+            </ul>
+            <small><strong>Note:</strong> Use <code>\\</code> to escape special characters like dots</small>
+        </div>
     </form>
     <ul id="custom-url-list"></ul>
     

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 Seth Cottle
+// Copyright (C) 2023-2025 Seth Cottle
 
 // This file is part of TabCloser.
 
@@ -43,12 +43,31 @@ async function shouldCloseTab(url) {
     return false;
   });
   
-  // Check custom URLs (exact literal match)
-  const shouldCloseCustom = customUrls.some(({ url: customUrl, enabled }) => {
-    if (enabled && url === customUrl) {
-      if (debug) console.log(`Should close (custom): true (matched: ${customUrl})`);
-      return true;
+  // Enhanced custom URL checking with regex support
+  const shouldCloseCustom = customUrls.some(({ url: customUrl, enabled, isRegex = false }) => {
+    if (!enabled) return false;
+    
+    try {
+      if (isRegex) {
+        // Treat as regular expression
+        const regex = new RegExp(customUrl, 'i');
+        if (regex.test(url)) {
+          if (debug) console.log(`Should close (custom regex): true (matched: ${customUrl})`);
+          return true;
+        }
+      } else {
+        // Exact match (existing behavior)
+        if (url === customUrl) {
+          if (debug) console.log(`Should close (custom exact): true (matched: ${customUrl})`);
+          return true;
+        }
+      }
+    } catch (error) {
+      // Invalid regex pattern - log error but don't crash
+      if (debug) console.error(`Invalid regex pattern "${customUrl}":`, error);
+      return false;
     }
+    
     return false;
   });
   
