@@ -11,6 +11,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
 // GNU General Public License for more details.
 
+// Cross-browser namespace: Chrome <144 uses chrome.*, Firefox and Chrome 144+ use browser.*
+const api = typeof browser !== 'undefined' ? browser : chrome;
+
 const debug = false; // Set to true for debugging
 
 const predefinedUrlPatterns = [
@@ -20,10 +23,10 @@ const predefinedUrlPatterns = [
   { label: 'Figma Design Files', pattern: '^https?://(?:www\.)?figma\.com/design/' },
   { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/' },
   { label: 'Figma Slide Files', pattern: '^https?://(?:www\.)?figma\.com/slides/' },
-  { label: 'Linear', pattern: '^https?://linear\\.app/.*\\?noRedirect=1$' },
+  { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$' },
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*' },
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true' },
-  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)' },
+  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)' },
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com' },
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare' },
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice' },
@@ -31,7 +34,7 @@ const predefinedUrlPatterns = [
 ];
 
 async function shouldCloseTab(url) {
-  const { disabledUrls = [], customUrls = [] } = await chrome.storage.sync.get(['disabledUrls', 'customUrls']);
+  const { disabledUrls = [], customUrls = [] } = await api.storage.sync.get(['disabledUrls', 'customUrls']);
   
   // Check predefined patterns
   const shouldCloseDefault = predefinedUrlPatterns.some(({ pattern, label }) => {
@@ -81,13 +84,13 @@ async function shouldCloseTab(url) {
 async function checkAndCloseTab(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete') {
     if (debug) console.log(`Tab updated: ${tab.url}`);
-    const { interval = 15 } = await chrome.storage.sync.get(['interval']);
+    const { interval = 15 } = await api.storage.sync.get(['interval']);
     
     if (await shouldCloseTab(tab.url)) {
       if (debug) console.log(`Scheduling tab for closure: ${tab.url}`);
       setTimeout(async () => {
         try {
-          await chrome.tabs.remove(tabId);
+          await api.tabs.remove(tabId);
           if (debug) console.log(`Closed tab: ${tab.url}`);
         } catch (error) {
           if (debug) console.error(`Error closing tab ${tab.url}: ${error.message}`);
@@ -98,16 +101,16 @@ async function checkAndCloseTab(tabId, changeInfo, tab) {
 }
 
 // Listen for tab updates
-chrome.tabs.onUpdated.addListener(checkAndCloseTab);
+api.tabs.onUpdated.addListener(checkAndCloseTab);
 
 // Service Worker initialization
-chrome.runtime.onInstalled.addListener(() => {
+api.runtime.onInstalled.addListener(() => {
   if (debug) console.log('TabCloser installed');
 });
 
 // Debug logging for storage changes
 if (debug) {
-  chrome.storage.onChanged.addListener((changes, areaName) => {
+  api.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync') {
       console.log('Storage changes:', changes);
     }

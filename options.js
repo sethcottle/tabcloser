@@ -11,6 +11,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
 // GNU General Public License for more details. 
 
+// Cross-browser namespace: Chrome <144 uses chrome.*, Firefox and Chrome 144+ use browser.*
+const api = typeof browser !== 'undefined' ? browser : chrome;
+
 const debug = false; // Set to true when you need to debug
 
 const predefinedUrlPatterns = [
@@ -20,10 +23,10 @@ const predefinedUrlPatterns = [
   { label: 'Figma Design Files', pattern: '^https?://(?:www\.)?figma\.com/design/', icon: 'figma-design.svg'},
   { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/', icon: 'figma-figjam.svg'},
   { label: 'Figma Slide Files', pattern: '^https?://(?:www\.)?figma\.com/slides/', icon: 'figma-slides.svg'},
-  { label: 'Linear', pattern: '^https?://linear\\.app/.*\\?noRedirect=1$', icon: 'linear.svg'},
+  { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$', icon: 'linear.svg'},
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*', icon: 'teams.svg'},
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true', icon: 'notion.svg'},
-  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)', icon: 'slack.svg'},
+  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)', icon: 'slack.svg'},
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com', icon: 'spotify.svg'},
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare', icon: 'code.svg'},
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice', icon: 'webex.svg'},
@@ -38,13 +41,13 @@ function saveOptions() {
       disabledUrls.push(pattern);
     }
   });
-  chrome.storage.sync.set({ disabledUrls }, () => {
+  api.storage.sync.set({ disabledUrls }, () => {
     console.log('Default options saved');
   });
 }
 
 function renderDefaultOptions() {
-  chrome.storage.sync.get(['disabledUrls'], ({ disabledUrls = [] }) => {
+  api.storage.sync.get(['disabledUrls'], ({ disabledUrls = [] }) => {
     const container = document.getElementById('default-options');
     container.innerHTML = '';
     predefinedUrlPatterns.forEach(({ label, pattern, icon }) => {
@@ -91,7 +94,7 @@ function saveOptions() {
       disabledUrls.push(predefinedUrlPatterns[index].pattern);
     }
   });
-  chrome.storage.sync.set({ disabledUrls }, () => {
+  api.storage.sync.set({ disabledUrls }, () => {
     if (debug) {
       console.log('Options saved. Disabled URLs:', disabledUrls);
     }
@@ -118,7 +121,7 @@ function saveCustomUrl(event) {
     }
   }
   
-  chrome.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
+  api.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
     // Check for duplicates
     const isDuplicate = customUrls.some(item => 
       item.url === customUrl && item.isRegex === isRegex
@@ -132,7 +135,7 @@ function saveCustomUrl(event) {
         dateAdded: new Date().toISOString()
       });
       
-      chrome.storage.sync.set({ customUrls }, () => {
+      api.storage.sync.set({ customUrls }, () => {
         renderCustomUrls();
         document.getElementById('custom-url').value = '';
         document.getElementById('url-type-exact').checked = true;
@@ -155,10 +158,18 @@ function saveCustomUrl(event) {
 }
 
 function renderCustomUrls() {
-  chrome.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
+  api.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
     const list = document.getElementById('custom-url-list');
     list.innerHTML = '';
-    
+
+    if (customUrls.length === 0) {
+      const emptyLi = document.createElement('li');
+      emptyLi.className = 'empty-state';
+      emptyLi.textContent = 'No custom URLs added yet';
+      list.appendChild(emptyLi);
+      return;
+    }
+
     customUrls.forEach(({ url, enabled, isRegex = false }, index) => {
       const li = document.createElement('li');
       li.className = 'custom-url-item';
@@ -208,21 +219,21 @@ function renderCustomUrls() {
 }
 
 function toggleCustomUrl(index) {
-  chrome.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
+  api.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
     customUrls[index].enabled = !customUrls[index].enabled;
-    chrome.storage.sync.set({ customUrls }, renderCustomUrls);
+    api.storage.sync.set({ customUrls }, renderCustomUrls);
   });
 }
 
 function removeCustomUrl(index) {
-  chrome.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
+  api.storage.sync.get(['customUrls'], ({ customUrls = [] }) => {
     customUrls.splice(index, 1);
-    chrome.storage.sync.set({ customUrls }, renderCustomUrls);
+    api.storage.sync.set({ customUrls }, renderCustomUrls);
   });
 }
 
 function loadCheckInterval() {
-  chrome.storage.sync.get(['interval'], ({ interval = 15 }) => {
+  api.storage.sync.get(['interval'], ({ interval = 15 }) => {
     document.getElementById('check-interval').value = interval;
   });
 }
@@ -230,7 +241,7 @@ function loadCheckInterval() {
 function saveCheckInterval() {
   const interval = parseInt(document.getElementById('check-interval').value, 10);
   if (interval > 0) {
-    chrome.storage.sync.set({ interval }, () => {
+    api.storage.sync.set({ interval }, () => {
       console.log('Check interval saved:', interval);
     });
   }
@@ -239,27 +250,62 @@ function saveCheckInterval() {
 function toggleRegexHelp() {
   const regexRadio = document.getElementById('url-type-regex');
   const regexHelp = document.getElementById('regex-help');
-  
+
   if (regexRadio && regexHelp) {
     regexHelp.style.display = regexRadio.checked ? 'block' : 'none';
   }
+}
+
+// Collapsible sections
+function initCollapsibleSections() {
+  api.storage.sync.get(['collapsedSections'], ({ collapsedSections = [] }) => {
+    document.querySelectorAll('.section-header').forEach(header => {
+      const section = header.dataset.section;
+      const content = document.querySelector(`.section-content[data-section="${section}"]`);
+      if (!content) return;
+
+      // Restore collapsed state
+      if (collapsedSections.includes(section)) {
+        header.classList.add('collapsed');
+        content.classList.add('collapsed');
+      }
+
+      header.addEventListener('click', () => {
+        const isCollapsed = header.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+
+        // Persist state
+        api.storage.sync.get(['collapsedSections'], ({ collapsedSections = [] }) => {
+          if (isCollapsed) {
+            if (!collapsedSections.includes(section)) {
+              collapsedSections.push(section);
+            }
+          } else {
+            collapsedSections = collapsedSections.filter(s => s !== section);
+          }
+          api.storage.sync.set({ collapsedSections });
+        });
+      });
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   renderDefaultOptions();
   renderCustomUrls();
   loadCheckInterval();
-  
+  initCollapsibleSections();
+
   document.getElementById('custom-url-form').addEventListener('submit', saveCustomUrl);
   document.getElementById('check-interval').addEventListener('change', saveCheckInterval);
-  
+
   // Add event listeners for regex help toggle
   const regexRadio = document.getElementById('url-type-regex');
   const exactRadio = document.getElementById('url-type-exact');
-  
+
   if (regexRadio) regexRadio.addEventListener('change', toggleRegexHelp);
   if (exactRadio) exactRadio.addEventListener('change', toggleRegexHelp);
-  
+
   // Initialize regex help visibility
   toggleRegexHelp();
 });
