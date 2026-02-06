@@ -156,7 +156,7 @@ Download the latest release and unzip the Chrome zip. Then navigate to `edge://e
 Download the latest release and unzip the Firefox zip. Navigate to `about:debugging#/runtime/this-firefox` and click "Load Temporary Add-on", then select any file in the unzipped TabCloser folder.
 
 #### For Safari
-TabCloser is available on the macOS App Store. Once installed, launch Safari and go to `Safari` > `Settings` > `Extensions` and enable TabCloser. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
+`tabcloser-4.0.0-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3). You can also purchaes it directly from the macOS App Store for $1.99.
 
 ---
 
@@ -180,7 +180,7 @@ Signing up through these services through these affiliate links is also a good w
 
 ## 🆕 Stay Connected
 
-Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get updates on LittleLink and more. Use the invite code `PrAEQFF2fK` or click the button below.
+Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get updates on TabCloser and more. Use the invite code `PrAEQFF2fK` or click the button below.
 
 [![Discord](https://cdn.cottle.cloud/tabcloser/buttons/button-discord.svg)](https://discord.gg/PrAEQFF2fK)
 
@@ -188,7 +188,7 @@ Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get upda
 
 ## License
 
-Copyright (C) 2023-2025 Seth Cottle
+Copyright (C) 2023-2026 Seth Cottle
 
 TabCloser is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

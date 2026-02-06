@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025 Seth Cottle
+// Copyright (C) 2023-2026 Seth Cottle
 
 // This file is part of TabCloser.
 
