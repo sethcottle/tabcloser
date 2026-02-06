@@ -81,27 +81,52 @@ async function shouldCloseTab(url) {
   return shouldCloseDefault || shouldCloseCustom;
 }
 
-async function checkAndCloseTab(tabId, changeInfo, tab) {
-  if (changeInfo.status === 'complete') {
-    if (debug) console.log(`Tab updated: ${tab.url}`);
+// Track tabs that already have a close scheduled to avoid duplicates
+const pendingClose = new Set();
+
+async function scheduleClose(tabId, url) {
+  // Don't schedule if already pending or if URL is empty/blank
+  if (pendingClose.has(tabId) || !url || url === 'about:blank' || url === 'about:newtab') return;
+
+  if (await shouldCloseTab(url)) {
+    pendingClose.add(tabId);
+    if (debug) console.log(`Scheduling tab for closure: ${url}`);
     const { interval = 15 } = await api.storage.sync.get(['interval']);
-    
-    if (await shouldCloseTab(tab.url)) {
-      if (debug) console.log(`Scheduling tab for closure: ${tab.url}`);
-      setTimeout(async () => {
-        try {
-          await api.tabs.remove(tabId);
-          if (debug) console.log(`Closed tab: ${tab.url}`);
-        } catch (error) {
-          if (debug) console.error(`Error closing tab ${tab.url}: ${error.message}`);
-        }
-      }, interval * 1000);
-    }
+
+    setTimeout(async () => {
+      try {
+        await api.tabs.remove(tabId);
+        if (debug) console.log(`Closed tab: ${url}`);
+      } catch (error) {
+        if (debug) console.error(`Error closing tab ${url}: ${error.message}`);
+      } finally {
+        pendingClose.delete(tabId);
+      }
+    }, interval * 1000);
   }
 }
 
-// Listen for tab updates
-api.tabs.onUpdated.addListener(checkAndCloseTab);
+// Listen for tab updates — trigger on both status complete and URL changes
+api.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' || changeInfo.url) {
+    const url = changeInfo.url || tab.url;
+    if (debug) console.log(`Tab updated (${changeInfo.status || 'url change'}): ${url}`);
+    scheduleClose(tabId, url);
+  }
+});
+
+// Listen for new tabs — catches externally-opened tabs (Safari, OAuth flows, etc.)
+api.tabs.onCreated.addListener((tab) => {
+  if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:newtab') {
+    if (debug) console.log(`Tab created with URL: ${tab.url}`);
+    scheduleClose(tab.id, tab.url);
+  }
+});
+
+// Clean up tracking when tabs are closed by the user or other means
+api.tabs.onRemoved.addListener((tabId) => {
+  pendingClose.delete(tabId);
+});
 
 // Service Worker initialization
 api.runtime.onInstalled.addListener(() => {
