@@ -1,7 +1,6 @@
+<!--
 
-<!-- 
-  
-Copyright (C) 2023-2024 Seth Cottle
+Copyright (C) 2023-2026 Seth Cottle
 
 This file is part of TabCloser.
 
@@ -12,82 +11,124 @@ the Free Software Foundation, either version 3 of the License, or any later vers
 TabCloser is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
-GNU General Public License for more details. 
+GNU General Public License for more details.
 
 -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TabCloser</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TabCloser</title>
 
-    <style>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --border-color: #e0e0e0;
+      --input-bg: #f5f5f5;
+      --button-gradient: linear-gradient(to right, #9584FF, #4B78FF);
+      --button-gradient-hover: linear-gradient(to right, #8A75FF, #3D69FF);
+      --button-text: #ffffff;
+      --checkbox-bg: #e0e0e0;
+      --checkbox-border: #b0b0b0;
+      --svg-color: #333333;
+      --link-color: #3D69FF;
+      --link-hover-color: #8A75FF;
+    }
+
+    @media (prefers-color-scheme: dark) {
       :root {
-          --bg-color: #ffffff;
-          --text-color: #333333;
-          --border-color: #e0e0e0;
-          --input-bg: #f5f5f5;
-          --button-gradient: linear-gradient(to right, #9584FF, #4B78FF);
-          --button-gradient-hover: linear-gradient(to right, #8A75FF, #3D69FF);
-          --button-text: #ffffff;
-          --checkbox-bg: #e0e0e0;
-          --checkbox-border: #b0b0b0;
-          --svg-color: #333333; 
-          --link-color: #3D69FF;
-          --link-hover-color: #8A75FF;
+        --bg-color: #1e1e1e;
+        --text-color: #f0f0f0;
+        --border-color: #444444;
+        --input-bg: #2a2a2a;
+        --checkbox-bg: #444444;
+        --checkbox-border: #666666;
+        --svg-color: #f0f0f0;
+        --link-color: #ADB4FF;
+        --link-hover-color: #DBDEFF;
       }
-  
-      @media (prefers-color-scheme: dark) {
-          :root {
-              --bg-color: #1e1e1e;
-              --text-color: #f0f0f0;
-              --border-color: #444444;
-              --input-bg: #2a2a2a;
-              --checkbox-bg: #444444;
-              --checkbox-border: #666666;
-              --svg-color: #f0f0f0;
-              --link-color: #ADB4FF;
-              --link-hover-color: #DBDEFF;
-          }
-      }
-  
-      body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          max-width: 800px;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: var(--bg-color);
-          color: var(--text-color);
-          line-height: 1.6;
-      }
-  
-      body.popup-body {
-          min-width: 400px;
-          width: 400px;
-          max-width: 100vw;
-          padding: 15px;
-          box-sizing: border-box;
-      }
-  
-      body.popup-body > * {
-          max-width: 100%;
-      }
-  
-      h1 {
-          color: var(--text-color);
-          margin-top: 8px;
-        }
+    }
 
-        h2 {
-          color: var(--text-color);
-          border-bottom: 2px solid var(--border-color);
-          padding-bottom: 10px;
-          margin-top: 32px;
-        }
-    
-          .option-icon {
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    body.popup-body {
+      width: 450px;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+      font-size: 13px;
+    }
+
+    h1 {
+      color: var(--text-color);
+      margin-top: 4px;
+      margin-bottom: 0;
+      font-size: 20px;
+    }
+
+    /* Collapsible section headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: var(--text-color);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-top: 14px;
+      margin-bottom: 0;
+      user-select: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .section-header:hover {
+      opacity: 0.8;
+    }
+
+    .section-header .chevron {
+      font-size: 12px;
+      transition: transform 0.25s ease;
+      opacity: 0.5;
+    }
+
+    .section-header.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
+
+    .section-content {
+      max-height: 2000px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+      opacity: 1;
+      margin-top: 10px;
+    }
+
+    .section-content.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    /* Service option rows */
+    .option-icon {
       width: 20px;
       height: 20px;
       margin-right: 10px;
@@ -104,218 +145,428 @@ GNU General Public License for more details.
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .option label {
-        flex-grow: 1;
-        margin-right: 10px;
-        cursor: pointer;
+      flex-grow: 1;
+      margin-right: 10px;
+      cursor: pointer;
     }
-  
-      #custom-url-form {
-          margin-top: 20px;
-          display: flex;
-          gap: 10px;
+
+    /* Custom URL form */
+    #custom-url-form {
+      margin-top: 8px;
+    }
+
+    .url-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* Styled radio buttons */
+    .url-type-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .radio-option {
+      flex: 1;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-card {
+      display: flex;
+      flex-direction: column;
+      padding: 10px 12px;
+      background-color: var(--input-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-card {
+      border-color: #7B6EFF;
+      background-color: rgba(149, 132, 255, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .radio-option input[type="radio"]:checked + .radio-card {
+        background-color: rgba(149, 132, 255, 0.15);
       }
-  
-      #custom-url-list {
-          list-style-type: none;
-          padding: 0;
+    }
+
+    .radio-card:hover {
+      border-color: #9584FF;
+    }
+
+    .radio-label {
+      font-weight: 500;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .radio-card small {
+      color: var(--text-color);
+      opacity: 0.6;
+      font-size: 11px;
+    }
+
+    /* Regex help */
+    .regex-help {
+      background-color: var(--input-bg);
+      padding: 10px;
+      border-radius: 4px;
+      border-left: 3px solid #7b1fa2;
+      margin-bottom: 15px;
+    }
+
+    .regex-help h4 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .regex-help ul {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .regex-help code {
+      background-color: var(--border-color);
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 12px;
+    }
+
+    /* Custom URL list */
+    #custom-url-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .custom-url-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background-color: var(--input-bg);
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .custom-url-item:hover {
+      transform: translateX(5px);
+    }
+
+    .url-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .type-indicator {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .type-indicator.exact {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .type-indicator.regex {
+      background-color: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .type-indicator.exact {
+        background-color: #1976d2;
+        color: #e3f2fd;
       }
-  
-      #custom-url-list li {
-          margin-bottom: 10px;
-          display: flex;
-          align-items: center;
-          gap: 15px;
-          background-color: var(--input-bg);
-          padding: 8px 12px;
-          border-radius: 4px;
-          transition: all 0.3s ease;
+
+      .type-indicator.regex {
+        background-color: #7b1fa2;
+        color: #f3e5f5;
       }
-  
-      #custom-url-list li:hover {
-          transform: translateX(5px);
-      }
-  
-      #custom-url-list li span {
-          flex-grow: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-      }
-  
-      input[type="text"], input[type="number"] {
-          padding: 8px;
-          border: 1px solid var(--border-color);
-          border-radius: 4px;
-          background-color: var(--input-bg);
-          color: var(--text-color);
-          flex-grow: 1;
-      }
-  
-      button {
-          padding: 8px 15px;
-          background: var(--button-gradient);
-          color: var(--button-text);
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-      }
-  
-      button:hover {
-          background: var(--button-gradient-hover);
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-  
-      .remove-btn {
-        background: none !important;
-        border: none !important;
-        cursor: pointer;
-        font-size: 18px;
-        padding: 5px;
-        opacity: 0.7;
-        transition: all 0.3s ease;
-        color: inherit !important; 
-        box-shadow: none !important;
+    }
+
+    .url-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 13px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 16px;
+      color: var(--text-color);
+      opacity: 0.5;
+      font-size: 13px;
+      list-style: none;
+    }
+
+    /* Inputs */
+    input[type="text"], input[type="number"] {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      flex-grow: 1;
+    }
+
+    button {
+      padding: 8px 15px;
+      background: var(--button-gradient);
+      color: var(--button-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: var(--button-gradient-hover);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .remove-btn {
+      background: none !important;
+      border: none !important;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+      color: inherit !important;
+      box-shadow: none !important;
     }
 
     .custom-url-remove-btn.remove-btn {
-        background: none !important;
-        border: none !important;
-        cursor: pointer;
-        font-size: 18px;
-        padding: 5px;
-        opacity: 0.7;
-        transition: all 0.3s ease;
-        color: inherit !important;
-        box-shadow: none !important;
+      background: none !important;
+      border: none !important;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 5px;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+      color: inherit !important;
+      box-shadow: none !important;
     }
 
     .custom-url-remove-btn.remove-btn:hover {
-        opacity: 1;
-        color: #ff3333 !important;
-        background: none !important;
+      opacity: 1;
+      color: #ff3333 !important;
+      background: none !important;
     }
 
-    /* Ensure contrast in light theme */
     @media (prefers-color-scheme: light) {
-        .custom-url-remove-btn.remove-btn {
-            filter: contrast(0.5);
-        }
-        .custom-url-remove-btn.remove-btn:hover {
-            filter: none;
-        }
+      .custom-url-remove-btn.remove-btn {
+        filter: contrast(0.5);
+      }
+      .custom-url-remove-btn.remove-btn:hover {
+        filter: none;
+      }
     }
 
-    /* Ensure contrast in dark theme */
     @media (prefers-color-scheme: dark) {
-        .custom-url-remove-btn.remove-btn {
-            filter: brightness(1.5);
-        }
-        .custom-url-remove-btn.remove-btn:hover {
-            filter: none;
-        }
+      .custom-url-remove-btn.remove-btn {
+        filter: brightness(1.5);
+      }
+      .custom-url-remove-btn.remove-btn:hover {
+        filter: none;
+      }
     }
 
-  
-      #check-interval {
-          margin-bottom: 20px;
-          width: 60px;
-      }
-  
-      a {
-          color: var(--link-color);
-          text-decoration: none;
-          transition: all 0.3s ease;
-      }
-  
-      a:hover {
-          text-decoration: underline;
-          color: var(--link-hover-color);
-      }
-  
-      .switch {
-        position: relative;
-        display: inline-block;
-        width: 40px;
-        height: 22px;
-        flex-shrink: 0;
+    /* Close time card */
+    .interval-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background-color: var(--input-bg);
+      border-radius: 8px;
+    }
+
+    .interval-container input[type="number"] {
+      width: 60px;
+      flex-grow: 0;
+    }
+
+    .interval-container label {
+      font-size: 14px;
+    }
+
+    /* Links */
+    a {
+      color: var(--link-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: var(--link-hover-color);
+    }
+
+    /* Toggle switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
     }
 
     .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
     .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: var(--checkbox-bg);
-        transition: .4s;
-        border-radius: 34px;
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--checkbox-bg);
+      transition: .4s;
+      border-radius: 34px;
     }
 
     .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 2px;
-        bottom: 2px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
     }
 
     input:checked + .slider {
-        background: var(--button-gradient);
+      background: var(--button-gradient);
     }
 
     input:checked + .slider:before {
-        transform: translateX(18px);
+      transform: translateX(18px);
     }
 
-    /* Ensure the slider doesn't stretch */
     .option .switch,
     #custom-url-list .switch {
-        width: 40px;
-        min-width: 40px;
-        max-width: 40px;
+      width: 40px;
+      min-width: 40px;
+      max-width: 40px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      opacity: 0.7;
+      text-align: center;
     }
   </style>
-  
+
 </head>
 <body class="popup-body">
-    <h1>TabCloser</h1>
-    
-    <h2>Default Services</h2>
+  <h1>TabCloser</h1>
+
+  <div class="section-header" data-section="services">
+    <span>Default Services</span>
+    <span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-content" data-section="services">
     <div id="default-options"></div>
-    
-    <h2>Custom URLs</h2>
+  </div>
+
+  <div class="section-header" data-section="custom">
+    <span>Custom URLs</span>
+    <span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-content" data-section="custom">
     <form id="custom-url-form">
-        <input type="text" id="custom-url" placeholder="Enter URL to close" required>
+      <div class="url-input-container">
+        <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
         <button type="submit">Add URL</button>
+      </div>
+
+      <div class="url-type-selector">
+        <label class="radio-option">
+          <input type="radio" name="url-type" id="url-type-exact" value="exact" checked>
+          <div class="radio-card">
+            <span class="radio-label">Exact Match</span>
+            <small>Matches the URL exactly as entered</small>
+          </div>
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" name="url-type" id="url-type-regex" value="regex">
+          <div class="radio-card">
+            <span class="radio-label">Regular Expression</span>
+            <small>Matches URLs using regex pattern</small>
+          </div>
+        </label>
+      </div>
+
+      <div class="regex-help" id="regex-help" style="display: none;">
+        <h4>Common Regex Patterns:</h4>
+        <ul>
+          <li><code>^https?://localhost:\\d+/.*</code> - Any localhost with port</li>
+          <li><code>^https?://.*\\.example\\.com/.*</code> - Any subdomain of example.com</li>
+          <li><code>^https?://.*\\.zoom\\.us/j/\\d+.*#success$</code> - Zoom success pages</li>
+        </ul>
+        <small><strong>Note:</strong> Use <code>\\</code> to escape special characters like dots</small>
+      </div>
     </form>
     <ul id="custom-url-list"></ul>
-    
-    <h2>Close Time</h2>
-    <div>
-        <input type="number" id="check-interval" min="1" value="15"> <label for="check-interval"> Seconds
+  </div>
+
+  <div class="section-header" data-section="interval">
+    <span>Close Time</span>
+    <span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-content" data-section="interval">
+    <div class="interval-container">
+      <input type="number" id="check-interval" min="1" value="15">
+      <label for="check-interval">Seconds</label>
     </div>
-    
+  </div>
+
+  <footer class="footer">
     Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tabcloser.com" target="_blank">TabCloser.com</a>
+  </footer>
 
-    <script src="options.js"></script>
+  <script src="options.js"></script>
+  <script src="popup.js"></script>
 </body>
-
-<script src="popup.js"></script>
-
 </html>

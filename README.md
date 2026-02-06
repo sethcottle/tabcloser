@@ -1,6 +1,6 @@
 <img src="https://cdn.cottle.cloud/tabcloser/tabcloser.svg" width="150">
 
-# TabCloser 3
+# TabCloser 4
 
 [What is TabCloser?](https://github.com/sethcottle/tabcloser#what-is-tabcloser) | [TabCloser Options](https://github.com/sethcottle/tabcloser#tabcloser-options) | [URL Schemas](https://github.com/sethcottle/tabcloser#url-schema) | [Privacy and Permissions](https://github.com/sethcottle/tabcloser#requested-permissions) | [Installing TabCloser](https://github.com/sethcottle/tabcloser#installing-tabcloser) | [License](https://github.com/sethcottle/tabcloser#license)
 
@@ -17,7 +17,12 @@ By default, Asana, Discord invites, Figma, Notion, Slack, Spotify, VS Code Live 
 
 #### Custom URLs
 
-TabCloser 3 brings the ability to add custom URLs to the detection criteria. TabCloser <b>will only</b> close URLs that are an <b>exact match</b> to what is entered. That means if the URL is `https://example.com/` instead of `https://example.com`, TabCloser will not close the tab because the trailing `/` is missing from the end of the entry. The Custom URL options is great for closing out out specific pages you may use, like leftover tabs from SSO, VPN, ..etc redirect pages.
+TabCloser supports adding custom URLs to the detection criteria. You can choose between two matching modes:
+
+- **Exact Match** — TabCloser will only close URLs that match exactly what is entered. That means if the URL is `https://example.com/` instead of `https://example.com`, TabCloser will not close the tab because the trailing `/` is missing from the end of the entry.
+- **Regular Expression** — TabCloser will use a regex pattern to match URLs. For example, `^https?://.*\.xyz(/.*)?$` would close any tab on a `.xyz` domain.
+
+The Custom URL option is great for closing out specific pages you may use, like leftover tabs from SSO, VPN, etc. redirect pages.
 
 ![TabCloser Custom URL](https://cdn.cottle.cloud/tabcloser/custom-urls.svg)
 
@@ -60,9 +65,9 @@ For Figma, TabCloser is using three patterns: `^https?://(?:www\.)?figma\.com/de
 TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs which can be redirected to the Figma desktop client.
 
 #### Linear
-For Linear, TabCloser is using `^https?://linear\\.app/.*\\?noRedirect=1$'`
+For Linear, TabCloser is using `^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$`
 
-The `\\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
+The `(?!integrations(/|$)|settings(/|$))` is a negative lookahead that prevents TabCloser from closing Linear integration pages (like `/integrations/github-copilot`) and settings pages. The `\\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
 
 #### Microsoft Teams
 For Microsoft Teams, TabCloser is using `^https?://teams\\.microsoft\\.com/dl/launcher/.*`
@@ -75,13 +80,13 @@ For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOp
 The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
 
 #### Slack
-Slack is a little more complicated that our typical regex patterns. TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)`
+Slack is a little more complicated than our typical regex patterns. TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)`
 
-`(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion that excludes several important Slack URLs:
+`(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion that excludes several important Slack URLs:
 - `app\\.slack\\.com` keeps the web client open
 - `slack\\.com` excludes the base Slack website
 - `api\\.slack\\.com` excludes developer docs
-- `.*\\/(customize|account|apps)(\\/|$)` excludes settings and configuration pages
+- `.*\\/(customize|account|apps|marketplace)(\\/|$)` excludes settings, configuration, and marketplace pages
 - `.*\\/home(\\/|$)` excludes the home page
 
 `[a-z0-9-]+\\.(enterprise\\.)?slack\\.com` matches both regular Slack workspaces (like `team.slack.com`) and enterprise workspaces (like `company.enterprise.slack.com`).
@@ -130,7 +135,7 @@ TabCloser runs completely locally in your browser. It does not collect any analy
 
 ## Installing TabCloser
 
-TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-ons Store, and available for manual download and installation.
+TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-ons Store, the macOS App Store, and available for manual download and installation. Firefox support is new in TabCloser 4.
 
 [![Get on the Google Chrome Web Store](https://cdn.cottle.cloud/tabcloser/buttons/button-webstore.svg)](https://chrome.google.com/webstore/detail/tabcloser/ebhkgfbgbcaphagkjbiffhnfbmkkbadb?hl=en&authuser=0)
 
@@ -142,13 +147,16 @@ TabCloser is available in the Google Chrome Web Store, the Microsoft Edge Add-on
 
 
 #### For Chrome
-Download the latest release and unzip it. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+Download the latest release and unzip the Chrome zip. Then navigate to `chrome://extensions/` and enable "Developer mode" using the toggle in the top right corner. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
 
 #### For Edge
-Download the latest release and unzip it. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+Download the latest release and unzip the Chrome zip. Then navigate to `edge://extensions/` and enable "Developer mode" in the left sidebar, it's near the bottom. Upload the extension manually by pressing "Load unpacked" and selecting the unzipped TabCloser folder.
+
+#### For Firefox
+Download the latest release and unzip the Firefox zip. Navigate to `about:debugging#/runtime/this-firefox` and click "Load Temporary Add-on", then select any file in the unzipped TabCloser folder.
 
 #### For Safari
-`tabcloser-3.2.2-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3).
+`tabcloser-4.0.0-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3). You can also purchaes it directly from the macOS App Store for $1.99.
 
 ---
 
@@ -172,7 +180,7 @@ Signing up through these services through these affiliate links is also a good w
 
 ## 🆕 Stay Connected
 
-Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get updates on LittleLink and more. Use the invite code `PrAEQFF2fK` or click the button below.
+Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get updates on TabCloser and more. Use the invite code `PrAEQFF2fK` or click the button below.
 
 [![Discord](https://cdn.cottle.cloud/tabcloser/buttons/button-discord.svg)](https://discord.gg/PrAEQFF2fK)
 
@@ -180,7 +188,7 @@ Join the [Seth's Nook Discord](https://discord.gg/PrAEQFF2fK) server to get upda
 
 ## License
 
-Copyright (C) 2023-2024 Seth Cottle
+Copyright (C) 2023-2026 Seth Cottle
 
 TabCloser is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

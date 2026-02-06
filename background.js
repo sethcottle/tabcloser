@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 Seth Cottle
+// Copyright (C) 2023-2026 Seth Cottle
 
 // This file is part of TabCloser.
 
@@ -11,6 +11,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. Please see the
 // GNU General Public License for more details.
 
+// Cross-browser namespace: Chrome <144 uses chrome.*, Firefox and Chrome 144+ use browser.*
+const api = typeof browser !== 'undefined' ? browser : chrome;
+
 const debug = false; // Set to true for debugging
 
 const predefinedUrlPatterns = [
@@ -20,10 +23,10 @@ const predefinedUrlPatterns = [
   { label: 'Figma Design Files', pattern: '^https?://(?:www\.)?figma\.com/design/' },
   { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/' },
   { label: 'Figma Slide Files', pattern: '^https?://(?:www\.)?figma\.com/slides/' },
-  { label: 'Linear', pattern: '^https?://linear\\.app/.*\\?noRedirect=1$' },
+  { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$' },
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*' },
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true' },
-  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)' },
+  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)' },
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com' },
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare' },
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice' },
@@ -31,7 +34,7 @@ const predefinedUrlPatterns = [
 ];
 
 async function shouldCloseTab(url) {
-  const { disabledUrls = [], customUrls = [] } = await chrome.storage.sync.get(['disabledUrls', 'customUrls']);
+  const { disabledUrls = [], customUrls = [] } = await api.storage.sync.get(['disabledUrls', 'customUrls']);
   
   // Check predefined patterns
   const shouldCloseDefault = predefinedUrlPatterns.some(({ pattern, label }) => {
@@ -43,12 +46,31 @@ async function shouldCloseTab(url) {
     return false;
   });
   
-  // Check custom URLs (exact literal match)
-  const shouldCloseCustom = customUrls.some(({ url: customUrl, enabled }) => {
-    if (enabled && url === customUrl) {
-      if (debug) console.log(`Should close (custom): true (matched: ${customUrl})`);
-      return true;
+  // Enhanced custom URL checking with regex support
+  const shouldCloseCustom = customUrls.some(({ url: customUrl, enabled, isRegex = false }) => {
+    if (!enabled) return false;
+    
+    try {
+      if (isRegex) {
+        // Treat as regular expression
+        const regex = new RegExp(customUrl, 'i');
+        if (regex.test(url)) {
+          if (debug) console.log(`Should close (custom regex): true (matched: ${customUrl})`);
+          return true;
+        }
+      } else {
+        // Exact match (existing behavior)
+        if (url === customUrl) {
+          if (debug) console.log(`Should close (custom exact): true (matched: ${customUrl})`);
+          return true;
+        }
+      }
+    } catch (error) {
+      // Invalid regex pattern - log error but don't crash
+      if (debug) console.error(`Invalid regex pattern "${customUrl}":`, error);
+      return false;
     }
+    
     return false;
   });
   
@@ -59,36 +81,61 @@ async function shouldCloseTab(url) {
   return shouldCloseDefault || shouldCloseCustom;
 }
 
-async function checkAndCloseTab(tabId, changeInfo, tab) {
-  if (changeInfo.status === 'complete') {
-    if (debug) console.log(`Tab updated: ${tab.url}`);
-    const { interval = 15 } = await chrome.storage.sync.get(['interval']);
-    
-    if (await shouldCloseTab(tab.url)) {
-      if (debug) console.log(`Scheduling tab for closure: ${tab.url}`);
-      setTimeout(async () => {
-        try {
-          await chrome.tabs.remove(tabId);
-          if (debug) console.log(`Closed tab: ${tab.url}`);
-        } catch (error) {
-          if (debug) console.error(`Error closing tab ${tab.url}: ${error.message}`);
-        }
-      }, interval * 1000);
-    }
+// Track tabs that already have a close scheduled to avoid duplicates
+const pendingClose = new Set();
+
+async function scheduleClose(tabId, url) {
+  // Don't schedule if already pending or if URL is empty/blank
+  if (pendingClose.has(tabId) || !url || url === 'about:blank' || url === 'about:newtab') return;
+
+  if (await shouldCloseTab(url)) {
+    pendingClose.add(tabId);
+    if (debug) console.log(`Scheduling tab for closure: ${url}`);
+    const { interval = 15 } = await api.storage.sync.get(['interval']);
+
+    setTimeout(async () => {
+      try {
+        await api.tabs.remove(tabId);
+        if (debug) console.log(`Closed tab: ${url}`);
+      } catch (error) {
+        if (debug) console.error(`Error closing tab ${url}: ${error.message}`);
+      } finally {
+        pendingClose.delete(tabId);
+      }
+    }, interval * 1000);
   }
 }
 
-// Listen for tab updates
-chrome.tabs.onUpdated.addListener(checkAndCloseTab);
+// Listen for tab updates — trigger on both status complete and URL changes
+api.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' || changeInfo.url) {
+    const url = changeInfo.url || tab.url;
+    if (debug) console.log(`Tab updated (${changeInfo.status || 'url change'}): ${url}`);
+    scheduleClose(tabId, url);
+  }
+});
+
+// Listen for new tabs — catches externally-opened tabs (Safari, OAuth flows, etc.)
+api.tabs.onCreated.addListener((tab) => {
+  if (tab.url && tab.url !== 'about:blank' && tab.url !== 'about:newtab') {
+    if (debug) console.log(`Tab created with URL: ${tab.url}`);
+    scheduleClose(tab.id, tab.url);
+  }
+});
+
+// Clean up tracking when tabs are closed by the user or other means
+api.tabs.onRemoved.addListener((tabId) => {
+  pendingClose.delete(tabId);
+});
 
 // Service Worker initialization
-chrome.runtime.onInstalled.addListener(() => {
+api.runtime.onInstalled.addListener(() => {
   if (debug) console.log('TabCloser installed');
 });
 
 // Debug logging for storage changes
 if (debug) {
-  chrome.storage.onChanged.addListener((changes, areaName) => {
+  api.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync') {
       console.log('Storage changes:', changes);
     }
