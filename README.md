@@ -156,7 +156,7 @@ Download the latest release and unzip the Chrome zip. Then navigate to `edge://e
 Download the latest release and unzip the Firefox zip. Navigate to `about:debugging#/runtime/this-firefox` and click "Load Temporary Add-on", then select any file in the unzipped TabCloser folder.
 
 #### For Safari
-`tabcloser-4.0.0-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3). You can also purchaes it directly from the macOS App Store for $1.99.
+`tabcloser-4.0.0-macos.zip` is available for download in the latest release. You can unzip this and drag TabCloser.app to your Applications folder. TabCloser.app was created using Xcode and signed for Direct Distribution, however there are a few steps you'll need to take to enable it. Once you install TabCloser you'll need to launch Safari and go to `Safari` > `Settings` > `Advanced` and check `Show features for web developers`. Once you've done that, go to the Developer tab and enable `Allow unsigned extensions`. [Need help? Watch the installation video](https://youtu.be/ZKSxBJY_g7c?si=7oH_BDfJDnXYTIY3). You can also purchaes it directly from the macOS App Store for $1.99 (to help offset the $99 annual developer fee).
 
 ---
 

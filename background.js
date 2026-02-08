@@ -128,10 +128,14 @@ api.tabs.onRemoved.addListener((tabId) => {
   pendingClose.delete(tabId);
 });
 
-// Service Worker initialization
-api.runtime.onInstalled.addListener(() => {
+// Open welcome page on first install; set uninstall survey URL
+api.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    api.tabs.create({ url: 'https://tinyextensions.com/tabcloser-howto' });
+  }
   if (debug) console.log('TabCloser installed');
 });
+api.runtime.setUninstallURL('https://tinyextensions.com/uninstall.html?ext=tabcloser');
 
 // Debug logging for storage changes
 if (debug) {
