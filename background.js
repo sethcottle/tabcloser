@@ -26,7 +26,7 @@ const predefinedUrlPatterns = [
   { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$' },
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*' },
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true' },
-  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)' },
+  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/' },
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com' },
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare' },
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice' },
@@ -81,19 +81,20 @@ async function shouldCloseTab(url) {
   return shouldCloseDefault || shouldCloseCustom;
 }
 
-// Track tabs that already have a close scheduled to avoid duplicates
-const pendingClose = new Set();
+// Track tabs that have a close scheduled — maps tabId to its timeout ID
+const pendingClose = new Map();
 
 async function scheduleClose(tabId, url) {
-  // Don't schedule if already pending or if URL is empty/blank
-  if (pendingClose.has(tabId) || !url || url === 'about:blank' || url === 'about:newtab') return;
+  if (!url || url === 'about:blank' || url === 'about:newtab') return;
 
   if (await shouldCloseTab(url)) {
-    pendingClose.add(tabId);
+    // Already scheduled for this tab — skip duplicate
+    if (pendingClose.has(tabId)) return;
+
     if (debug) console.log(`Scheduling tab for closure: ${url}`);
     const { interval = 15 } = await api.storage.sync.get(['interval']);
 
-    setTimeout(async () => {
+    const timeoutId = setTimeout(async () => {
       try {
         await api.tabs.remove(tabId);
         if (debug) console.log(`Closed tab: ${url}`);
@@ -103,6 +104,13 @@ async function scheduleClose(tabId, url) {
         pendingClose.delete(tabId);
       }
     }, interval * 1000);
+
+    pendingClose.set(tabId, timeoutId);
+  } else if (pendingClose.has(tabId)) {
+    // URL changed to something that shouldn't close — cancel the pending closure
+    clearTimeout(pendingClose.get(tabId));
+    pendingClose.delete(tabId);
+    if (debug) console.log(`Cancelled pending close — tab navigated to: ${url}`);
   }
 }
 
@@ -125,7 +133,10 @@ api.tabs.onCreated.addListener((tab) => {
 
 // Clean up tracking when tabs are closed by the user or other means
 api.tabs.onRemoved.addListener((tabId) => {
-  pendingClose.delete(tabId);
+  if (pendingClose.has(tabId)) {
+    clearTimeout(pendingClose.get(tabId));
+    pendingClose.delete(tabId);
+  }
 });
 
 // Open welcome page on first install; set uninstall survey URL

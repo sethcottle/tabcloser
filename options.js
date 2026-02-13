@@ -26,7 +26,7 @@ const predefinedUrlPatterns = [
   { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$', icon: 'linear.svg'},
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*', icon: 'teams.svg'},
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true', icon: 'notion.svg'},
-  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)', icon: 'slack.svg'},
+  { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/', icon: 'slack.svg'},
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com', icon: 'spotify.svg'},
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare', icon: 'code.svg'},
   { label: 'Webex Joins', pattern: '^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice', icon: 'webex.svg'},
