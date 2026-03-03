@@ -60,7 +60,15 @@ For Discord, TabCloser is using `^https?://discord\\.com/invite/`.
 The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
 
 #### Figma
-For Figma, TabCloser is using three patterns: `^https?://(?:www\.)?figma\.com/design/` for Figma Design files, `^https?://(?:www\.)?figma\.com/board/` for FigJam files, and `^https?://(?:www\.)?figma\.com/slides/` for Figma Slide files (note that TabCloser will not close `/presentation/` files from shared Slide presentations).
+For Figma, TabCloser is using six patterns to cover the different Figma products:
+- `^https?://(?:www\.)?figma\.com/buzz/` for Figma Buzz files
+- `^https?://(?:www\.)?figma\.com/design/` for Figma Design files
+- `^https?://(?:www\.)?figma\.com/make/` for Figma Make files
+- `^https?://(?:www\.)?figma\.com/site/` for Figma Sites files
+- `^https?://(?:www\.)?figma\.com/slides/` for Figma Slide files
+- `^https?://(?:www\.)?figma\.com/board/` for FigJam files
+
+Note that TabCloser will not close `/deck/` URLs from shared Slide presentations, published `*.figma.site` URLs, or `/proto/` prototype links.
 
 TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs which can be redirected to the Figma desktop client.
 

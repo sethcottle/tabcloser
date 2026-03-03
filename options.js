@@ -20,9 +20,12 @@ const predefinedUrlPatterns = [
   { label: 'Asana', pattern: '^https?://app\\.asana\\.com/-/desktop_app_link\\?.*', icon: 'asana.svg'},
   { label: 'AWS IAM Access Auth Success', pattern: '^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html', icon: 'aws-iam.svg'},
   { label: 'Discord Invites', pattern: '^https?://discord\\.com/invite/', icon: 'discord.svg'},
+  { label: 'Figma Buzz', pattern: '^https?://(?:www\.)?figma\.com/buzz/', icon: 'figma-buzz.svg'},
   { label: 'Figma Design Files', pattern: '^https?://(?:www\.)?figma\.com/design/', icon: 'figma-design.svg'},
-  { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/', icon: 'figma-figjam.svg'},
+  { label: 'Figma Make', pattern: '^https?://(?:www\.)?figma\.com/make/', icon: 'figma-make.svg'},
+  { label: 'Figma Sites', pattern: '^https?://(?:www\.)?figma\.com/site/', icon: 'figma-sites.svg'},
   { label: 'Figma Slide Files', pattern: '^https?://(?:www\.)?figma\.com/slides/', icon: 'figma-slides.svg'},
+  { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/', icon: 'figma-figjam.svg'},
   { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$', icon: 'linear.svg'},
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*', icon: 'teams.svg'},
   { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true', icon: 'notion.svg'},
@@ -50,7 +53,7 @@ function renderDefaultOptions() {
   api.storage.sync.get(['disabledUrls'], ({ disabledUrls = [] }) => {
     const container = document.getElementById('default-options');
     container.innerHTML = '';
-    predefinedUrlPatterns.forEach(({ label, pattern, icon }) => {
+    predefinedUrlPatterns.forEach(({ label, pattern, icon }, index) => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'option';
 
@@ -59,11 +62,13 @@ function renderDefaultOptions() {
       iconImg.alt = `${label} icon`;
       iconImg.className = 'option-icon';
 
-      const labelElement = document.createElement('label');
+      const labelElement = document.createElement('span');
       labelElement.textContent = label;
 
-      const labelContainer = document.createElement('div');
+      const inputId = `toggle-${index}`;
+      const labelContainer = document.createElement('label');
       labelContainer.className = 'label-container';
+      labelContainer.htmlFor = inputId;
       labelContainer.appendChild(iconImg);
       labelContainer.appendChild(labelElement);
 
@@ -71,6 +76,7 @@ function renderDefaultOptions() {
       toggleSwitch.className = 'switch';
       const toggleInput = document.createElement('input');
       toggleInput.type = 'checkbox';
+      toggleInput.id = inputId;
       toggleInput.checked = !disabledUrls.includes(pattern);
       toggleInput.addEventListener('change', () => saveOptions());
       const slider = document.createElement('span');
