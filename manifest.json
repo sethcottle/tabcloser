@@ -18,6 +18,26 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.asana.com/*",
+        "https://*.awsapps.com/*",
+        "https://discord.com/*",
+        "https://*.figma.com/*",
+        "https://linear.app/*",
+        "https://teams.microsoft.com/*",
+        "https://www.notion.so/*",
+        "https://*.slack.com/*",
+        "https://open.spotify.com/*",
+        "https://vscode.dev/*",
+        "https://*.webex.com/*",
+        "https://*.zoom.us/*"
+      ],
+      "js": ["content-spa-nav.js"],
+      "run_at": "document_start"
+    }
+  ],
   "options_page": "options.html",
   "icons": {
     "16": "images/icon16.png",

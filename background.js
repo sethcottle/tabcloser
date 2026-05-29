@@ -134,6 +134,15 @@ api.tabs.onCreated.addListener((tab) => {
   }
 });
 
+// Listen for URL reports from content scripts — covers in-page (History API) navigations
+// that tabs.onUpdated misses in Safari (e.g. Linear's redirect to ...?noRedirect=1)
+api.runtime.onMessage.addListener((message, sender) => {
+  if (message && message.type === 'tabcloser:url' && sender.tab && sender.tab.id != null) {
+    if (debug) console.log(`Content script reported URL (tab ${sender.tab.id}): ${message.url}`);
+    scheduleClose(sender.tab.id, message.url);
+  }
+});
+
 // Clean up tracking when tabs are closed by the user or other means
 api.tabs.onRemoved.addListener((tabId) => {
   if (pendingClose.has(tabId)) {
