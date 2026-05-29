@@ -28,7 +28,7 @@ const predefinedUrlPatterns = [
   { label: 'Figjam Files', pattern: '^https?://(?:www\.)?figma\.com/board/' },
   { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$' },
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*' },
-  { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true' },
+  { label: 'Notion', pattern: '^https?://(app\\.notion\\.com|www\\.notion\\.so)/native/.*[?&]deepLinkOpenNewTab=true' },
   { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/' },
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com' },
   { label: 'VS Code Live Share', pattern: '^https?://vscode\\.dev/liveshare' },
