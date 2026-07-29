@@ -254,8 +254,10 @@ function buildGroup(groupName, members, disabledUrls) {
   );
   toggleInput.classList.add('group-master');
 
-  header.appendChild(expandBtn);
+  // Chevron sits on the right, in the same slot as other rows' pattern
+  // button, so the group's icon stays flush with the rest of the list
   header.appendChild(labelContainer);
+  header.appendChild(expandBtn);
   header.appendChild(toggleSwitch);
   groupEl.appendChild(header);
   groupEl.appendChild(membersEl);

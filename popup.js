@@ -141,7 +141,7 @@ async function renderManageSummary() {
     ? 'no custom rules'
     : `${customUrls.length} custom rule${customUrls.length === 1 ? '' : 's'}`;
   document.getElementById('manage-detail').textContent =
-    `${total - disabledCount}/${total} default services on · ${customPart}`;
+    `${total - disabledCount}/${total} services on · ${customPart}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
