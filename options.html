@@ -23,49 +23,63 @@ GNU General Public License for more details.
   <title>TabCloser</title>
 
   <style>
+    /* Theme tokens. prefers-color-scheme reflects the browser's appearance
+       setting (which follows the OS unless the user overrides it in the
+       browser); color-scheme makes browser-rendered UI — scrollbars, inputs,
+       pickers — follow the same theme instead of clashing with ours. */
     :root {
-      --bg-color: #ffffff;
-      --text-color: #333333;
-      --border-color: #e0e0e0;
-      --input-bg: #f5f5f5;
-      --button-gradient: linear-gradient(to right, #9584FF, #4B78FF);
-      --button-gradient-hover: linear-gradient(to right, #8A75FF, #3D69FF);
-      --button-text: #ffffff;
-      --checkbox-bg: #e0e0e0;
-      --checkbox-border: #b0b0b0;
-      --svg-color: #333333;
-      --link-color: #3D69FF;
-      --link-hover-color: #8A75FF;
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --surface: #f6f6f8;
+      --border: #e2e2e7;
+      --text: #1f2328;
+      --text-muted: #69707d;
+      --accent: #2F55D4;
+      --accent-hover: #2444B8;
+      --on-accent: #ffffff;
+      --danger: #b42318;
+      --track-off: #d4d4da;
+      --toast-bg: #24292f;
+      --toast-text: #ffffff;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg-color: #1e1e1e;
-        --text-color: #f0f0f0;
-        --border-color: #444444;
-        --input-bg: #2a2a2a;
-        --checkbox-bg: #444444;
-        --checkbox-border: #666666;
-        --svg-color: #f0f0f0;
-        --link-color: #ADB4FF;
-        --link-hover-color: #DBDEFF;
+        --bg: #1c1c1f;
+        --surface: #26262b;
+        --border: #3a3a41;
+        --text: #e8e8ea;
+        --text-muted: #9a9aa3;
+        --accent: #adb4ff;
+        --accent-hover: #c4c9ff;
+        --on-accent: #17171c;
+        --danger: #f28b82;
+        --track-off: #4a4a52;
+        --toast-bg: #ececf0;
+        --toast-text: #1c1c1f;
       }
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 800px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+      max-width: 640px;
       margin: 0 auto;
-      padding: 20px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
+      padding: 24px 20px 20px;
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
     }
 
     h1 {
-      color: var(--text-color);
-      margin-top: 4px;
-      margin-bottom: 0;
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 4px;
     }
 
     /* Collapsible section headers */
@@ -74,24 +88,22 @@ GNU General Public License for more details.
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      color: var(--text-color);
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 10px;
-      margin-top: 16px;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 0;
+      margin-top: 20px;
       margin-bottom: 0;
       user-select: none;
-      font-size: 1.5em;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 600;
     }
 
-    .section-header:hover {
+    .section-header:hover .chevron {
       opacity: 0.8;
     }
 
     .section-header .chevron {
-      font-size: 12px;
-      transition: transform 0.25s ease;
-      opacity: 0.5;
+      opacity: 0.45;
+      transition: transform 0.15s ease-out;
     }
 
     .section-header.collapsed .chevron {
@@ -99,9 +111,9 @@ GNU General Public License for more details.
     }
 
     .section-content {
-      max-height: 2000px;
+      max-height: 3000px;
       overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
+      transition: max-height 0.2s ease-out, opacity 0.15s ease-out, margin 0.2s ease-out;
       opacity: 1;
       margin-top: 12px;
     }
@@ -112,49 +124,180 @@ GNU General Public License for more details.
       margin-top: 0;
     }
 
-    /* Service option rows */
+    /* Service list: one bordered container, hairline dividers */
+    #default-options {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #default-options > * + * {
+      border-top: 1px solid var(--border);
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 6px 12px;
+      margin: 0;
+    }
+
+    .option:hover {
+      background-color: var(--surface);
+    }
+
     .option-icon {
       width: 20px;
       height: 20px;
-      margin-right: 10px;
-      vertical-align: middle;
+      flex-shrink: 0;
     }
 
     .label-container {
       display: flex;
       align-items: center;
+      gap: 10px;
       flex-grow: 1;
-    }
-
-    .option {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .option label {
-      flex-grow: 1;
-      margin-right: 10px;
+      min-width: 0;
       cursor: pointer;
+    }
+
+    .label-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .option-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Per-service pattern reveal */
+    .reveal-pattern-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .reveal-pattern-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .pattern-reveal[hidden] {
+      display: none;
+    }
+
+    .pattern-reveal {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 8px 12px 8px 42px;
+    }
+
+    .pattern-reveal code {
+      flex-grow: 1;
+      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-size: 11px;
+      word-break: break-all;
+      color: var(--text-muted);
+    }
+
+    .copy-pattern-btn {
+      padding: 3px 10px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    /* Service groups (e.g. Figma) */
+    .group-header .label-container {
+      cursor: pointer;
+    }
+
+    .group-expand-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      margin-left: -6px;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: none;
+    }
+
+    .group-expand-btn:hover {
+      background-color: var(--border);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .group-expand-btn .chevron {
+      transform: rotate(-90deg);
+      transition: transform 0.15s ease-out;
+    }
+
+    .service-group.expanded .group-expand-btn .chevron {
+      transform: rotate(0deg);
+    }
+
+    .group-members {
+      border-top: 1px solid var(--border);
+      background-color: var(--surface);
+    }
+
+    .group-members > * + * {
+      border-top: 1px solid var(--border);
+    }
+
+    .sub-option .option {
+      padding-left: 42px;
+    }
+
+    .sub-option .option:hover {
+      background-color: var(--border);
+    }
+
+    .sub-option .pattern-reveal {
+      padding-left: 72px;
     }
 
     /* Custom URL form */
     #custom-url-form {
-      margin-top: 8px;
+      margin-top: 4px;
     }
 
     .url-input-container {
       display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
-    /* Styled radio buttons */
+    /* Match type radio cards */
     .url-type-selector {
       display: flex;
       gap: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .radio-option {
@@ -173,105 +316,118 @@ GNU General Public License for more details.
     .radio-card {
       display: flex;
       flex-direction: column;
-      padding: 10px 12px;
-      background-color: var(--input-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 8px;
-      transition: all 0.2s ease;
+      padding: 8px 12px;
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: border-color 0.15s ease-out;
     }
 
     .radio-option input[type="radio"]:checked + .radio-card {
-      border-color: #7B6EFF;
-      background-color: rgba(149, 132, 255, 0.08);
+      border-color: var(--accent);
     }
 
-    @media (prefers-color-scheme: dark) {
-      .radio-option input[type="radio"]:checked + .radio-card {
-        background-color: rgba(149, 132, 255, 0.15);
-      }
+    .radio-option input[type="radio"]:focus-visible + .radio-card {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
 
     .radio-card:hover {
-      border-color: #9584FF;
+      border-color: var(--text-muted);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-card:hover {
+      border-color: var(--accent);
     }
 
     .radio-label {
-      font-weight: 500;
-      font-size: 13px;
-      margin-bottom: 2px;
+      font-weight: 600;
+      font-size: 12.5px;
+      margin-bottom: 1px;
     }
 
     .radio-card small {
-      color: var(--text-color);
-      opacity: 0.6;
+      color: var(--text-muted);
       font-size: 11px;
     }
 
     /* Regex help */
     .regex-help {
-      background-color: var(--input-bg);
-      padding: 15px;
-      border-radius: 4px;
-      border-left: 3px solid #7b1fa2;
-      margin-bottom: 15px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
     }
 
     .regex-help h4 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      color: var(--text-color);
+      margin: 0 0 10px;
+      font-size: 13px;
+    }
+
+    .regex-help h5 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
     .regex-help ul {
-      margin: 10px 0;
-      padding-left: 20px;
+      margin: 8px 0;
+      padding-left: 18px;
     }
 
     .regex-help li {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .regex-help code {
-      background-color: var(--border-color);
-      padding: 3px 6px;
-      border-radius: 3px;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-      font-size: 12px;
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-size: 11.5px;
       word-break: break-all;
     }
 
+    .regex-help small {
+      color: var(--text-muted);
+    }
+
     .regex-examples {
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid var(--border-color);
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
     }
 
-    .regex-examples h5 {
-      margin-top: 0;
-      margin-bottom: 10px;
-      color: var(--text-color);
-    }
-
-    /* Custom URL list */
+    /* Custom URL list: same bordered-container treatment as services */
     #custom-url-list {
       list-style-type: none;
       padding: 0;
       margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    #custom-url-list:empty {
+      display: none;
     }
 
     .custom-url-item {
       display: flex;
       align-items: center;
-      gap: 15px;
-      background-color: var(--input-bg);
-      padding: 12px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
+      gap: 10px;
+      padding: 8px 12px;
+      min-height: 40px;
     }
 
     .custom-url-item:hover {
-      transform: translateX(5px);
+      background-color: var(--surface);
+    }
+
+    .custom-url-item + .custom-url-item {
+      border-top: 1px solid var(--border);
     }
 
     .url-container {
@@ -284,162 +440,186 @@ GNU General Public License for more details.
 
     .type-indicator {
       font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 12px;
+      padding: 1px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       font-weight: 600;
+      color: var(--text-muted);
       text-transform: uppercase;
+      letter-spacing: 0.3px;
       white-space: nowrap;
-    }
-
-    .type-indicator.exact {
-      background-color: #e3f2fd;
-      color: #1976d2;
-    }
-
-    .type-indicator.regex {
-      background-color: #f3e5f5;
-      color: #7b1fa2;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .type-indicator.exact {
-        background-color: #1976d2;
-        color: #e3f2fd;
-      }
-
-      .type-indicator.regex {
-        background-color: #7b1fa2;
-        color: #f3e5f5;
-      }
+      flex-shrink: 0;
     }
 
     .url-text {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-      font-size: 13px;
+      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-size: 12px;
     }
 
     .empty-state {
       text-align: center;
-      padding: 16px;
-      color: var(--text-color);
-      opacity: 0.5;
-      font-size: 13px;
+      padding: 14px;
+      color: var(--text-muted);
+      font-size: 12.5px;
       list-style: none;
     }
 
     /* Inputs */
     input[type="text"], input[type="number"] {
-      padding: 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background-color: var(--input-bg);
-      color: var(--text-color);
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
       flex-grow: 1;
     }
 
+    input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
     button {
-      padding: 8px 15px;
-      background: var(--button-gradient);
-      color: var(--button-text);
+      padding: 7px 14px;
+      background: var(--accent);
+      color: var(--on-accent);
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 500;
+      transition: background-color 0.15s ease-out;
     }
 
     button:hover {
-      background: var(--button-gradient-hover);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      background: var(--accent-hover);
     }
 
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Icon-only buttons (remove) */
     .remove-btn {
-      background: none !important;
-      border: none !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-muted);
       cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
-      opacity: 0.7;
-      transition: all 0.3s ease;
-      color: inherit !important;
-      box-shadow: none !important;
+      flex-shrink: 0;
     }
 
-    .custom-url-remove-btn.remove-btn {
-      background: none !important;
-      border: none !important;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
-      opacity: 0.7;
-      transition: all 0.3s ease;
-      color: inherit !important;
-      box-shadow: none !important;
+    .remove-btn:hover {
+      background-color: var(--border);
+      color: var(--danger);
+      box-shadow: none;
     }
 
-    .custom-url-remove-btn.remove-btn:hover {
-      opacity: 1;
-      color: #ff3333 !important;
-      background: none !important;
+    /* Inline validation */
+    .field-error {
+      color: var(--danger);
+      font-size: 12px;
+      margin: -6px 0 12px;
     }
 
-    @media (prefers-color-scheme: light) {
-      .custom-url-remove-btn.remove-btn {
-        filter: contrast(0.5);
-      }
-      .custom-url-remove-btn.remove-btn:hover {
-        filter: none;
-      }
+    input.input-error {
+      border-color: var(--danger);
     }
 
-    @media (prefers-color-scheme: dark) {
-      .custom-url-remove-btn.remove-btn {
-        filter: brightness(1.5);
-      }
-      .custom-url-remove-btn.remove-btn:hover {
-        filter: none;
-      }
-    }
-
-    /* Close time card */
+    /* Close time */
     .interval-container {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px;
-      background-color: var(--input-bg);
-      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
     }
 
     .interval-container input[type="number"] {
-      width: 60px;
+      width: 64px;
       flex-grow: 0;
     }
 
     .interval-container label {
-      font-size: 14px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Backup & restore */
+    .backup-description {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 0;
+    }
+
+    .backup-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 8px);
+      background: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+      z-index: 100;
+      max-width: 90%;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .toast-error {
+      background: var(--danger);
+      color: #ffffff;
     }
 
     /* Links */
     a {
-      color: var(--link-color);
+      color: var(--accent);
       text-decoration: none;
-      transition: all 0.3s ease;
     }
 
     a:hover {
       text-decoration: underline;
-      color: var(--link-hover-color);
+      color: var(--accent-hover);
     }
 
     /* Toggle switch */
     .switch {
       position: relative;
       display: inline-block;
-      width: 40px;
-      height: 22px;
+      width: 36px;
+      height: 20px;
       flex-shrink: 0;
     }
 
@@ -452,49 +632,54 @@ GNU General Public License for more details.
     .slider {
       position: absolute;
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--checkbox-bg);
-      transition: .4s;
-      border-radius: 34px;
+      inset: 0;
+      background-color: var(--track-off);
+      transition: background-color 0.15s ease-out;
+      border-radius: 20px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
       left: 2px;
       bottom: 2px;
-      background-color: white;
-      transition: .4s;
+      background-color: #ffffff;
+      transition: transform 0.15s ease-out, background-color 0.15s ease-out;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background: var(--button-gradient);
+      background-color: var(--accent);
     }
 
     input:checked + .slider:before {
-      transform: translateX(18px);
+      transform: translateX(16px);
+      background-color: var(--on-accent);
     }
 
-    .option .switch,
-    #custom-url-list .switch {
-      width: 40px;
-      min-width: 40px;
-      max-width: 40px;
+    /* Keyboard focus */
+    .switch input:focus-visible + .slider,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+      }
     }
 
     /* Footer */
     .footer {
       margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
-      font-size: 13px;
-      opacity: 0.7;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
       text-align: center;
     }
   </style>
@@ -505,7 +690,7 @@ GNU General Public License for more details.
 
   <div class="section-header" data-section="services">
     <span>Default Services</span>
-    <span class="chevron">&#9660;</span>
+    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="section-content" data-section="services">
     <div id="default-options"></div>
@@ -513,7 +698,7 @@ GNU General Public License for more details.
 
   <div class="section-header" data-section="custom">
     <span>Custom URLs</span>
-    <span class="chevron">&#9660;</span>
+    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="section-content" data-section="custom">
     <form id="custom-url-form">
@@ -521,6 +706,7 @@ GNU General Public License for more details.
         <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
         <button type="submit">Add URL</button>
       </div>
+      <div class="field-error" id="custom-url-error" hidden></div>
 
       <div class="url-type-selector">
         <label class="radio-option">
@@ -545,10 +731,10 @@ GNU General Public License for more details.
 
         <h5>Common Patterns:</h5>
         <ul>
-          <li><code>^https?://localhost:\\d+/.*</code> - Any localhost with port number</li>
-          <li><code>^https?://.*\\.example\\.com/.*</code> - Any subdomain of example.com</li>
-          <li><code>^https?://.*\\.zoom\\.us/j/\\d+.*#success$</code> - Zoom success pages</li>
-          <li><code>^https?://app\\.myservice\\.com/session/[a-f0-9-]+$</code> - Dynamic session IDs</li>
+          <li><code>^https?://localhost:\d+/.*</code> - Any localhost with port number</li>
+          <li><code>^https?://.*\.example\.com/.*</code> - Any subdomain of example.com</li>
+          <li><code>^https?://.*\.zoom\.us/j/\d+.*#success$</code> - Zoom success pages</li>
+          <li><code>^https?://app\.myservice\.com/session/[a-f0-9-]+$</code> - Dynamic session IDs</li>
         </ul>
 
         <div class="regex-examples">
@@ -557,13 +743,13 @@ GNU General Public License for more details.
             <li><code>^</code> - Start of URL</li>
             <li><code>$</code> - End of URL</li>
             <li><code>.*</code> - Match any characters</li>
-            <li><code>\\d+</code> - Match numbers (like port 3000, 8080)</li>
+            <li><code>\d+</code> - Match numbers (like port 3000, 8080)</li>
             <li><code>[a-f0-9-]+</code> - Match specific characters (like UUIDs)</li>
-            <li><code>\\.</code> - Match literal dot (escape with \\)</li>
+            <li><code>\.</code> - Match literal dot (escape with \)</li>
           </ul>
         </div>
 
-        <small><strong>Tip:</strong> Use <code>\\</code> to escape special characters. Test your patterns carefully!</small>
+        <small><strong>Tip:</strong> Use <code>\</code> to escape special characters. Test your patterns carefully!</small>
       </div>
     </form>
     <ul id="custom-url-list"></ul>
@@ -571,7 +757,7 @@ GNU General Public License for more details.
 
   <div class="section-header" data-section="interval">
     <span>Close Time</span>
-    <span class="chevron">&#9660;</span>
+    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </div>
   <div class="section-content" data-section="interval">
     <div class="interval-container">
@@ -580,10 +766,24 @@ GNU General Public License for more details.
     </div>
   </div>
 
+  <div class="section-header" data-section="backup">
+    <span>Backup &amp; Restore</span>
+    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="section-content" data-section="backup">
+    <p class="backup-description">Export your custom URLs, service toggles, and close time to a file, then import it into TabCloser on another browser or profile. Importing merges custom URLs with your existing list.</p>
+    <div class="backup-buttons">
+      <button type="button" id="export-settings">Export Settings</button>
+      <button type="button" id="import-settings">Import Settings</button>
+    </div>
+    <input type="file" id="import-file" accept=".json,application/json" style="display: none;">
+  </div>
+
   <footer class="footer">
-    Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tinyextensions.com/tabcloser" target="_blank">TinyExtensions.com</a>
+    Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tinyextensions.com/tabcloser" target="_blank">TinyExtensions.com</a> &nbsp;|&nbsp; <a href="https://github.com/sethcottle/tabcloser/releases" target="_blank" id="version-link"></a>
   </footer>
 
+  <script src="patterns.js"></script>
   <script src="options.js"></script>
 </body>
 

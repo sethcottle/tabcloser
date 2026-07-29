@@ -37,25 +37,25 @@ Here's how TabCloser is handling URLs for each service:
 
 `https?://`: This will match "http://" or "https://"
 
-`([a-z0-9-]+\\.)?`: This isn't included in each service, but it's to detect a subdomain, followed by a dot "."
+`([a-z0-9-]+\.)?`: This isn't included in each service, but it's to detect a subdomain, followed by a dot "."
 
-`example\\.com/`: This matches the primary URL of a particular service
+`example\.com/`: This matches the primary URL of a particular service
 
 
 #### Asana
-For Asana, TabCloser is using `^https?://app\\.asana\\.com/-/desktop_app_link\\?.*`. 
+For Asana, TabCloser is using `^https?://app\.asana\.com/-/desktop_app_link\?.*`. 
 
 The `app.asana.com/-/desktop_app_link?` designates that an Asana link is being redirected to the native Asana client. `.*` will match any string that follows the `?`.
 
 #### AWS IAM Access Authorization
 For the "Authorization Successful" page of the AWS IAM identity sign
 in flow, TabCloser is using
-`^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html`
+`^https://[a-z0-9-]+\.awsapps\.com/start/user-consent/login-success\.html`
 
 It only matches on secure connections, as that page would never be served over a non-secure one. The domain `[a-z0-9-]+.awsapps.com` should capture any AWS organization (the subdomain), and the regex only matches on the `login-success.html` page to make sure login errors would not be hidden from you.
 
 #### Discord
-For Discord, TabCloser is using `^https?://discord\\.com/invite/`. 
+For Discord, TabCloser is using `^https?://discord\.com/invite/`. 
 
 The `/invite/` is associated with a Discord invite which can be opened in the Discord desktop client.
 
@@ -73,31 +73,32 @@ Note that TabCloser will not close `/deck/` URLs from shared Slide presentations
 TabCloser <b>will not</b> close tabs for Figma Community profiles, templates, plugins, ..etc. Only file URLs which can be redirected to the Figma desktop client.
 
 #### Linear
-For Linear, TabCloser is using `^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$`
+For Linear, TabCloser is using `^https?://linear\.app/(?!integrations(/|$)|settings(/|$)).*\?noRedirect=1$`
 
-The `(?!integrations(/|$)|settings(/|$))` is a negative lookahead that prevents TabCloser from closing Linear integration pages (like `/integrations/github-copilot`) and settings pages. The `\\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
+The `(?!integrations(/|$)|settings(/|$))` is a negative lookahead that prevents TabCloser from closing Linear integration pages (like `/integrations/github-copilot`) and settings pages. The `\?noRedirect=1$` designates that the URL was successfully redirected to the Linear desktop client.
 
 #### Microsoft Teams
-For Microsoft Teams, TabCloser is using `^https?://teams\\.microsoft\\.com/dl/launcher/.*`
+For Microsoft Teams, TabCloser is using `^https?://teams\.microsoft\.com/dl/launcher/.*`
 
-The `teams\\.microsoft\\.com` matches the domain "teams.microsoft.com.". `/dl/launcher/` is looking for the Teams launcher page that givesm you the ability to download, use the web app, or launch in your current Teams install.
+The `teams\.microsoft\.com` matches the domain "teams.microsoft.com.". `/dl/launcher/` is looking for the Teams launcher page that givesm you the ability to download, use the web app, or launch in your current Teams install.
 
 #### Notion
-For Notion, TabCloser is using `^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true`
+For Notion, TabCloser is using `^https?://www\.notion\.so/native/.*&deepLinkOpenNewTab=true`
 
-The `^https?://www\\.notion\\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
+The `^https?://www\.notion\.so/native/` designates that it's being redirected to the native client. The `.*` allows for any string of content after the base URL. Then TabCloser is looking for an exact match on `&deepLinkOpenNewTab=true` to make sure the redirect was successful.
 
 #### Slack
-Slack is a little more complicated than our typical regex patterns. TabCloser is using `^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/(?:.*|ssb/signin_redirect\\?.*$)`
+Slack is a little more complicated than our typical regex patterns. TabCloser is using `^https?://(?!(app\.slack\.com|slack\.com|api\.slack\.com|files\.slack\.com|.*\/(admin|customize|account|apps|marketplace|files|files-pri)(\/|$)|.*\/home(\/|$)))[a-z0-9-]+\.(enterprise\.)?slack\.com/`
 
-`(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))` is a negative lookahead assertion that excludes several important Slack URLs:
-- `app\\.slack\\.com` keeps the web client open
-- `slack\\.com` excludes the base Slack website
-- `api\\.slack\\.com` excludes developer docs
-- `.*\\/(customize|account|apps|marketplace)(\\/|$)` excludes settings, configuration, and marketplace pages
-- `.*\\/home(\\/|$)` excludes the home page
+The negative lookahead assertion at the start excludes several important Slack URLs:
+- `app\.slack\.com` keeps the web client open
+- `slack\.com` excludes the base Slack website
+- `api\.slack\.com` excludes developer docs
+- `files\.slack\.com` excludes file previews and downloads
+- `.*\/(admin|customize|account|apps|marketplace|files|files-pri)(\/|$)` excludes admin, settings, configuration, and marketplace pages, plus file permalinks
+- `.*\/home(\/|$)` excludes the home page
 
-`[a-z0-9-]+\\.(enterprise\\.)?slack\\.com` matches both regular Slack workspaces (like `team.slack.com`) and enterprise workspaces (like `company.enterprise.slack.com`).
+`[a-z0-9-]+\.(enterprise\.)?slack\.com` matches both regular Slack workspaces (like `team.slack.com`) and enterprise workspaces (like `company.enterprise.slack.com`).
 
 TabCloser should close redirected tabs from:
 - Regular workspace redirects to the desktop app
@@ -105,29 +106,30 @@ TabCloser should close redirected tabs from:
 
 TabCloser shouldn't close:
 - The Slack web client (app.slack.com)
+- Files shared from Slack (files.slack.com and file permalinks)
 - Settings or configuration pages
 - The workspace home page
 - The main Slack website or docs
 
 #### Spotify
-For Spotify, TabCloser is using `^https?://open\\.spotify\\.com`
+For Spotify, TabCloser is using `^https?://open\.spotify\.com`
 
-The `open\\.` portion is typically associated with opening a song, artist, playlist, ..etc which can be opened in the Spotify desktop client.
+The `open\.` portion is typically associated with opening a song, artist, playlist, ..etc which can be opened in the Spotify desktop client.
 
 #### VS Code Live Share
-For Live Share, TabCloser is using `^https?://vscode\\.dev/liveshare`. 
+For Live Share, TabCloser is using `^https?://vscode\.dev/liveshare`. 
 
 The `/liveshare/` is associated with the Live Share URL which can be opened in the VS Code desktop client.
 
 #### Webex
-For Webex, TabCloser is using `^https?://([a-z0-9-]+\\.)?webex\\.com/wbxmjs/joinservice`. 
+For Webex, TabCloser is using `^https?://([a-z0-9-]+\.)?webex\.com/wbxmjs/joinservice`. 
 
-The `webex\\.com/wbxmjs/joinservice` is associated with the join meeting URL which can be opened in the Webex desktop client.
+The `webex\.com/wbxmjs/joinservice` is associated with the join meeting URL which can be opened in the Webex desktop client.
 
 #### Zoom
-For Zoom, TabCloser is using `^https?://([a-z0-9-]+\\.)?zoom\\.us/[js]/[^/]+.*#success$`
+For Zoom, TabCloser is using `^https?://([a-z0-9-]+\.)?zoom\.us/[js]/[^/]+.*#success$`
 
-`([a-z0-9-]+\\.)?` matches to any subdomain that your Zoom may be using. `zoom\\.us/` matches the core URL. `[js]/` matches the `/j/` and `/s/` paths that the redirect URL may encounter. `[^/]+` matches the meeting ID. `.*` matches anything between the meeting ID and `#success`, this accounts for things like a `pwd` being included in the URL. And of course, `#success$` matches the "#success" at the end of URL that has been successfully redirected to the Zoom client.
+`([a-z0-9-]+\.)?` matches to any subdomain that your Zoom may be using. `zoom\.us/` matches the core URL. `[js]/` matches the `/j/` and `/s/` paths that the redirect URL may encounter. `[^/]+` matches the meeting ID. `.*` matches anything between the meeting ID and `#success`, this accounts for things like a `pwd` being included in the URL. And of course, `#success$` matches the "#success" at the end of URL that has been successfully redirected to the Zoom client.
 
 
 ## Requested Permissions
@@ -136,6 +138,8 @@ TabCloser requests a few permissions in the `manifest.json` file.
 `tabs` allows TabCloser to interact with your tabs, giving it the ability to run when a new tab is detected and if a matched URL is found, close that tab automatically.
 
 `storage` allows TabCloser to save your `enabled` or `disabled` auto close preferences for a particular service, saves custom URLs you enter, and saves the interval you've set for closing tabs from the options menu.
+
+`alarms` allows TabCloser to wake up periodically to close tabs it has scheduled. Browsers suspend an idle extension in the background to save resources — the alarm makes sure a scheduled close still happens after a suspension, and catches redirected tabs whose final URL the browser never reported.
 
 #### Privacy
 

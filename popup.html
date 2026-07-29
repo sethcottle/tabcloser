@@ -23,33 +23,39 @@ GNU General Public License for more details.
   <title>TabCloser</title>
 
   <style>
+    /* Theme tokens — keep in sync with options.html. color-scheme makes
+       browser-rendered UI (scrollbars etc.) follow the same theme. */
     :root {
-      --bg-color: #ffffff;
-      --text-color: #333333;
-      --border-color: #e0e0e0;
-      --input-bg: #f5f5f5;
-      --button-gradient: linear-gradient(to right, #9584FF, #4B78FF);
-      --button-gradient-hover: linear-gradient(to right, #8A75FF, #3D69FF);
-      --button-text: #ffffff;
-      --checkbox-bg: #e0e0e0;
-      --checkbox-border: #b0b0b0;
-      --svg-color: #333333;
-      --link-color: #3D69FF;
-      --link-hover-color: #8A75FF;
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --surface: #f6f6f8;
+      --border: #e2e2e7;
+      --text: #1f2328;
+      --text-muted: #69707d;
+      --accent: #2F55D4;
+      --accent-hover: #2444B8;
+      --on-accent: #ffffff;
+      --danger: #b42318;
+      --track-off: #d4d4da;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg-color: #1e1e1e;
-        --text-color: #f0f0f0;
-        --border-color: #444444;
-        --input-bg: #2a2a2a;
-        --checkbox-bg: #444444;
-        --checkbox-border: #666666;
-        --svg-color: #f0f0f0;
-        --link-color: #ADB4FF;
-        --link-hover-color: #DBDEFF;
+        --bg: #1c1c1f;
+        --surface: #26262b;
+        --border: #3a3a41;
+        --text: #e8e8ea;
+        --text-muted: #9a9aa3;
+        --accent: #adb4ff;
+        --accent-hover: #c4c9ff;
+        --on-accent: #17171c;
+        --danger: #f28b82;
+        --track-off: #4a4a52;
       }
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     html, body {
@@ -58,386 +64,226 @@ GNU General Public License for more details.
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+      width: 340px;
+      padding: 14px;
+      background-color: var(--bg);
+      color: var(--text);
+      font-size: 13px;
       line-height: 1.5;
-      font-size: 14px;
+      font-variant-numeric: tabular-nums;
     }
 
-    body.popup-body {
-      width: 450px;
-      padding: 15px;
-      box-sizing: border-box;
-      overflow-x: hidden;
-      font-size: 13px;
-    }
-
-    h1 {
-      color: var(--text-color);
-      margin-top: 4px;
-      margin-bottom: 0;
-      font-size: 20px;
-    }
-
-    /* Collapsible section headers */
-    .section-header {
+    .popup-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      cursor: pointer;
-      color: var(--text-color);
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 8px;
-      margin-top: 14px;
-      margin-bottom: 0;
-      user-select: none;
-      font-size: 16px;
-      font-weight: bold;
+      margin-bottom: 10px;
     }
 
-    .section-header:hover {
-      opacity: 0.8;
-    }
-
-    .section-header .chevron {
-      font-size: 12px;
-      transition: transform 0.25s ease;
-      opacity: 0.5;
-    }
-
-    .section-header.collapsed .chevron {
-      transform: rotate(-90deg);
-    }
-
-    .section-content {
-      max-height: 2000px;
-      overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease;
-      opacity: 1;
-      margin-top: 10px;
-    }
-
-    .section-content.collapsed {
-      max-height: 0;
-      opacity: 0;
-      margin-top: 0;
-    }
-
-    /* Service option rows */
-    .option-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-
-    .label-container {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-    }
-
-    .option {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .option label {
-      flex-grow: 1;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-
-    /* Custom URL form */
-    #custom-url-form {
-      margin-top: 8px;
-    }
-
-    .url-input-container {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    /* Styled radio buttons */
-    .url-type-selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-
-    .radio-option {
-      flex: 1;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .radio-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .radio-card {
-      display: flex;
-      flex-direction: column;
-      padding: 10px 12px;
-      background-color: var(--input-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .radio-option input[type="radio"]:checked + .radio-card {
-      border-color: #7B6EFF;
-      background-color: rgba(149, 132, 255, 0.08);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .radio-option input[type="radio"]:checked + .radio-card {
-        background-color: rgba(149, 132, 255, 0.15);
-      }
-    }
-
-    .radio-card:hover {
-      border-color: #9584FF;
-    }
-
-    .radio-label {
-      font-weight: 500;
-      font-size: 13px;
-      margin-bottom: 2px;
-    }
-
-    .radio-card small {
-      color: var(--text-color);
-      opacity: 0.6;
-      font-size: 11px;
-    }
-
-    /* Regex help */
-    .regex-help {
-      background-color: var(--input-bg);
-      padding: 10px;
-      border-radius: 4px;
-      border-left: 3px solid #7b1fa2;
-      margin-bottom: 15px;
-    }
-
-    .regex-help h4 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      color: var(--text-color);
-    }
-
-    .regex-help ul {
-      margin: 8px 0;
-      padding-left: 20px;
-    }
-
-    .regex-help code {
-      background-color: var(--border-color);
-      padding: 2px 4px;
-      border-radius: 2px;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-      font-size: 12px;
-    }
-
-    /* Custom URL list */
-    #custom-url-list {
-      list-style-type: none;
-      padding: 0;
+    .popup-header h1 {
+      font-size: 15px;
+      font-weight: 600;
       margin: 0;
     }
 
-    .custom-url-item {
+    .status-row {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 15px;
-      background-color: var(--input-bg);
-      padding: 12px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
     }
 
-    .custom-url-item:hover {
-      transform: translateX(5px);
+    .status-text {
+      display: flex;
+      flex-direction: column;
     }
 
-    .url-container {
+    .status-text strong {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-text small {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .snooze-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .snooze-row button {
+      flex: 1;
+    }
+
+    button {
+      padding: 6px 12px;
+      background: var(--accent);
+      color: var(--on-accent);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 500;
+      transition: background-color 0.15s ease-out;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    button.secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover {
+      background: var(--surface);
+    }
+
+    .manage-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s ease-out;
+    }
+
+    .manage-row:hover {
+      border-color: var(--accent);
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .manage-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .manage-text strong {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .manage-text small {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .manage-chevron {
+      display: inline-flex;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    h2 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 0 0 6px;
+    }
+
+    .clear-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 400;
+      padding: 2px 4px;
+      cursor: pointer;
+    }
+
+    .clear-btn:hover {
+      background: none;
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    #recently-closed {
+      list-style: none;
+      margin: 0 0 4px;
+      padding: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow-y: auto;
+      max-height: 240px;
+    }
+
+    .closed-item {
       display: flex;
       align-items: center;
       gap: 8px;
+      padding: 7px 10px;
+    }
+
+    .closed-item:hover {
+      background-color: var(--surface);
+    }
+
+    .closed-item + .closed-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .closed-info {
       flex-grow: 1;
       min-width: 0;
     }
 
-    .type-indicator {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .type-indicator.exact {
-      background-color: #e3f2fd;
-      color: #1976d2;
-    }
-
-    .type-indicator.regex {
-      background-color: #f3e5f5;
-      color: #7b1fa2;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .type-indicator.exact {
-        background-color: #1976d2;
-        color: #e3f2fd;
-      }
-
-      .type-indicator.regex {
-        background-color: #7b1fa2;
-        color: #f3e5f5;
-      }
-    }
-
-    .url-text {
+    .closed-url {
+      display: block;
+      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-size: 11px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-      font-size: 13px;
+    }
+
+    .closed-meta {
+      display: block;
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .reopen-btn {
+      flex-shrink: 0;
+      padding: 3px 9px;
+      font-size: 11px;
     }
 
     .empty-state {
-      text-align: center;
-      padding: 16px;
-      color: var(--text-color);
-      opacity: 0.5;
-      font-size: 13px;
-      list-style: none;
-    }
-
-    /* Inputs */
-    input[type="text"], input[type="number"] {
-      padding: 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background-color: var(--input-bg);
-      color: var(--text-color);
-      flex-grow: 1;
-    }
-
-    button {
-      padding: 8px 15px;
-      background: var(--button-gradient);
-      color: var(--button-text);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background: var(--button-gradient-hover);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .remove-btn {
-      background: none !important;
-      border: none !important;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
-      opacity: 0.7;
-      transition: all 0.3s ease;
-      color: inherit !important;
-      box-shadow: none !important;
-    }
-
-    .custom-url-remove-btn.remove-btn {
-      background: none !important;
-      border: none !important;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
-      opacity: 0.7;
-      transition: all 0.3s ease;
-      color: inherit !important;
-      box-shadow: none !important;
-    }
-
-    .custom-url-remove-btn.remove-btn:hover {
-      opacity: 1;
-      color: #ff3333 !important;
-      background: none !important;
-    }
-
-    @media (prefers-color-scheme: light) {
-      .custom-url-remove-btn.remove-btn {
-        filter: contrast(0.5);
-      }
-      .custom-url-remove-btn.remove-btn:hover {
-        filter: none;
-      }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .custom-url-remove-btn.remove-btn {
-        filter: brightness(1.5);
-      }
-      .custom-url-remove-btn.remove-btn:hover {
-        filter: none;
-      }
-    }
-
-    /* Close time card */
-    .interval-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       padding: 12px;
-      background-color: var(--input-bg);
-      border-radius: 8px;
-    }
-
-    .interval-container input[type="number"] {
-      width: 60px;
-      flex-grow: 0;
-    }
-
-    .interval-container label {
-      font-size: 14px;
-    }
-
-    /* Links */
-    a {
-      color: var(--link-color);
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-
-    a:hover {
-      text-decoration: underline;
-      color: var(--link-hover-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
     }
 
     /* Toggle switch */
     .switch {
       position: relative;
       display: inline-block;
-      width: 40px;
-      height: 22px;
+      width: 36px;
+      height: 20px;
       flex-shrink: 0;
     }
 
@@ -450,123 +296,113 @@ GNU General Public License for more details.
     .slider {
       position: absolute;
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--checkbox-bg);
-      transition: .4s;
-      border-radius: 34px;
+      inset: 0;
+      background-color: var(--track-off);
+      transition: background-color 0.15s ease-out;
+      border-radius: 20px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 18px;
-      width: 18px;
+      height: 16px;
+      width: 16px;
       left: 2px;
       bottom: 2px;
-      background-color: white;
-      transition: .4s;
+      background-color: #ffffff;
+      transition: transform 0.15s ease-out, background-color 0.15s ease-out;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background: var(--button-gradient);
+      background-color: var(--accent);
     }
 
     input:checked + .slider:before {
-      transform: translateX(18px);
+      transform: translateX(16px);
+      background-color: var(--on-accent);
     }
 
-    .option .switch,
-    #custom-url-list .switch {
-      width: 40px;
-      min-width: 40px;
-      max-width: 40px;
+    .popup-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      margin-top: 10px;
+      padding-top: 10px;
+      font-size: 11px;
     }
 
-    /* Footer */
-    .footer {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-color);
-      font-size: 13px;
-      opacity: 0.7;
-      text-align: center;
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: var(--accent-hover);
+    }
+
+    #version-link {
+      color: var(--text-muted);
+    }
+
+    /* Keyboard focus */
+    .switch input:focus-visible + .slider,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+      }
     }
   </style>
-
 </head>
-<body class="popup-body">
-  <h1>TabCloser</h1>
-
-  <div class="section-header" data-section="services">
-    <span>Default Services</span>
-    <span class="chevron">&#9660;</span>
-  </div>
-  <div class="section-content" data-section="services">
-    <div id="default-options"></div>
+<body>
+  <div class="popup-header">
+    <h1>TabCloser</h1>
   </div>
 
-  <div class="section-header" data-section="custom">
-    <span>Custom URLs</span>
-    <span class="chevron">&#9660;</span>
-  </div>
-  <div class="section-content" data-section="custom">
-    <form id="custom-url-form">
-      <div class="url-input-container">
-        <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
-        <button type="submit">Add URL</button>
-      </div>
-
-      <div class="url-type-selector">
-        <label class="radio-option">
-          <input type="radio" name="url-type" id="url-type-exact" value="exact" checked>
-          <div class="radio-card">
-            <span class="radio-label">Exact Match</span>
-            <small>Matches the URL exactly as entered</small>
-          </div>
-        </label>
-
-        <label class="radio-option">
-          <input type="radio" name="url-type" id="url-type-regex" value="regex">
-          <div class="radio-card">
-            <span class="radio-label">Regular Expression</span>
-            <small>Matches URLs using regex pattern</small>
-          </div>
-        </label>
-      </div>
-
-      <div class="regex-help" id="regex-help" style="display: none;">
-        <h4>Common Regex Patterns:</h4>
-        <ul>
-          <li><code>^https?://localhost:\\d+/.*</code> - Any localhost with port</li>
-          <li><code>^https?://.*\\.example\\.com/.*</code> - Any subdomain of example.com</li>
-          <li><code>^https?://.*\\.zoom\\.us/j/\\d+.*#success$</code> - Zoom success pages</li>
-        </ul>
-        <small><strong>Note:</strong> Use <code>\\</code> to escape special characters like dots</small>
-      </div>
-    </form>
-    <ul id="custom-url-list"></ul>
+  <div class="status-row">
+    <span class="status-text">
+      <strong id="status-title">Active</strong>
+      <small id="status-detail">Watching for leftover tabs</small>
+    </span>
+    <label class="switch">
+      <input type="checkbox" id="active-toggle" role="switch" aria-label="TabCloser active">
+      <span class="slider"></span>
+    </label>
   </div>
 
-  <div class="section-header" data-section="interval">
-    <span>Close Time</span>
-    <span class="chevron">&#9660;</span>
-  </div>
-  <div class="section-content" data-section="interval">
-    <div class="interval-container">
-      <input type="number" id="check-interval" min="1" value="15">
-      <label for="check-interval">Seconds</label>
-    </div>
+  <div class="snooze-row">
+    <button type="button" id="snooze-btn" class="secondary">Pause for 15 minutes</button>
   </div>
 
-  <footer class="footer">
-    Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tabcloser.com" target="_blank">TabCloser.com</a>
-  </footer>
+  <a href="#" id="open-settings" class="manage-row" aria-label="Open TabCloser settings">
+    <span class="manage-text">
+      <strong>Manage services &amp; custom rules</strong>
+      <small id="manage-detail">Loading…</small>
+    </span>
+    <span class="manage-chevron" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </a>
 
-  <script src="options.js"></script>
+  <div class="list-header">
+    <h2>Recently closed</h2>
+    <button type="button" id="clear-closed" class="clear-btn" hidden>Clear</button>
+  </div>
+  <ul id="recently-closed"></ul>
+
+  <div class="popup-footer">
+    <a href="https://github.com/sethcottle/tabcloser/releases" target="_blank" id="version-link"></a>
+  </div>
+
+  <script src="patterns.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
