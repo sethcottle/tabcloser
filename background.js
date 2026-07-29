@@ -325,7 +325,8 @@ api.storage.onChanged.addListener((changes, areaName) => {
 // Open welcome page on first install; set uninstall survey URL
 api.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    api.tabs.create({ url: 'https://tinyextensions.com/tabcloser-howto' });
+    // BETA: points at the 5.0 beta page — revert to /tabcloser-howto before store release
+    api.tabs.create({ url: 'https://tinyextensions.com/tabcloser-5-beta' });
   }
   // Pattern edits ship with updates, so this is the right moment to rewrite
   // any stored old-form patterns (no-op when nothing matches)
