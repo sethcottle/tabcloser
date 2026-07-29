@@ -310,6 +310,13 @@ api.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local' && ('paused' in changes || 'snoozeUntil' in changes)) {
     handlePauseChange();
   }
+  // A not-yet-updated install on another synced machine can write old-format
+  // pattern strings back over the migrated list — re-migrate whenever the
+  // toggles change. Loop-safe: migration only writes when something changes,
+  // so a migrated list produces no further writes.
+  if (areaName === 'sync' && 'disabledUrls' in changes) {
+    migrateDisabledUrls();
+  }
   if (debug && areaName === 'sync') {
     console.log('Storage changes:', changes);
   }
