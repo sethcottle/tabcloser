@@ -563,42 +563,26 @@ function toggleRegexHelp() {
   }
 }
 
-// Collapsible sections
-async function initCollapsibleSections() {
-  const { collapsedSections = [] } = await api.storage.sync.get(['collapsedSections']);
-  document.querySelectorAll('.section-header').forEach(header => {
-    const section = header.dataset.section;
-    const content = document.querySelector(`.section-content[data-section="${section}"]`);
-    if (!content) return;
-
-    // Restore collapsed state
-    if (collapsedSections.includes(section)) {
-      header.classList.add('collapsed');
-      content.classList.add('collapsed');
-    }
-
-    header.addEventListener('click', async () => {
-      const isCollapsed = header.classList.toggle('collapsed');
-      content.classList.toggle('collapsed');
-
-      // Persist state
-      const { collapsedSections: current = [] } = await api.storage.sync.get(['collapsedSections']);
-      const updated = isCollapsed
-        ? [...new Set([...current, section])]
-        : current.filter(s => s !== section);
-      api.storage.sync.set({ collapsedSections: updated }).catch(() => {});
-    });
-  });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   renderDefaultOptions();
   renderCustomUrls();
   loadCheckInterval();
-  initCollapsibleSections();
 
   document.getElementById('custom-url-form').addEventListener('submit', saveCustomUrl);
   document.getElementById('check-interval').addEventListener('change', saveCheckInterval);
+
+  // Close time +/- steppers; manual typing still goes through the change
+  // listener above
+  document.querySelectorAll('.stepper-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById('check-interval');
+      const min = parseInt(input.min, 10) || 1;
+      const current = parseInt(input.value, 10);
+      const next = (Number.isNaN(current) ? 15 : current) + Number(btn.dataset.step);
+      input.value = Math.max(min, next);
+      input.dispatchEvent(new Event('change'));
+    });
+  });
 
   // Backup & restore
   document.getElementById('export-settings').addEventListener('click', exportSettings);

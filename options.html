@@ -23,412 +23,466 @@ GNU General Public License for more details.
   <title>TabCloser</title>
 
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     /* Theme tokens. prefers-color-scheme reflects the browser's appearance
-       setting (which follows the OS unless the user overrides it in the
-       browser); color-scheme makes browser-rendered UI — scrollbars, inputs,
+       setting; color-scheme makes browser-rendered UI — scrollbars, inputs,
        pickers — follow the same theme instead of clashing with ours. */
     :root {
       color-scheme: light dark;
-      --bg: #ffffff;
-      --surface: #f6f6f8;
-      --border: #e2e2e7;
-      --text: #1f2328;
-      --text-muted: #69707d;
-      --accent: #2F55D4;
-      --accent-hover: #2444B8;
-      --on-accent: #ffffff;
+      --bg: #f5f5f5;
+      --card-bg: #fff;
+      --card-border: rgba(0, 0, 0, 0.08);
+      --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      --heading: #111;
+      --text: #333;
+      --text-secondary: #666;
+      --text-muted: #999;
+      --text-faint: #bbb;
+      --radio-border: #ccc;
+      --radio-checked: #111;
+      --row-hover: rgba(0, 0, 0, 0.03);
+      --divider: rgba(0, 0, 0, 0.06);
+      --inset-bg: rgba(0, 0, 0, 0.025);
+      --link: #666;
+      --link-hover: #111;
+      --sep: #ccc;
+      --toggle-bg: #ccc;
+      --toggle-bg-on: #111;
+      --toggle-knob: #fff;
+      --input-bg: #fff;
+      --input-border: #d8d8d8;
+      --btn-bg: #111;
+      --btn-text: #fff;
+      --btn-hover: #333;
+      --btn2-border: #d8d8d8;
       --danger: #b42318;
-      --track-off: #d4d4da;
-      --toast-bg: #24292f;
-      --toast-text: #ffffff;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #1c1c1f;
-        --surface: #26262b;
-        --border: #3a3a41;
-        --text: #e8e8ea;
-        --text-muted: #9a9aa3;
-        --accent: #adb4ff;
-        --accent-hover: #c4c9ff;
-        --on-accent: #17171c;
+        --bg: #111;
+        --card-bg: #1a1a1a;
+        --card-border: rgba(255, 255, 255, 0.08);
+        --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --heading: #fff;
+        --text: #e0e0e0;
+        --text-secondary: #999;
+        --text-muted: #666;
+        --text-faint: #555;
+        --radio-border: #444;
+        --radio-checked: #fff;
+        --row-hover: rgba(255, 255, 255, 0.04);
+        --divider: rgba(255, 255, 255, 0.06);
+        --inset-bg: rgba(255, 255, 255, 0.03);
+        --link: #999;
+        --link-hover: #fff;
+        --sep: #333;
+        --toggle-bg: #333;
+        --toggle-bg-on: #fff;
+        --toggle-knob: #111;
+        --input-bg: #111;
+        --input-border: #3a3a3a;
+        --btn-bg: #fff;
+        --btn-text: #111;
+        --btn-hover: #ddd;
+        --btn2-border: #3a3a3a;
         --danger: #f28b82;
-        --track-off: #4a4a52;
-        --toast-bg: #ececf0;
-        --toast-text: #1c1c1f;
       }
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    [hidden] { display: none !important; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 24px 20px 20px;
-      background-color: var(--bg);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Helvetica, Arial, sans-serif;
       color: var(--text);
       font-size: 13px;
       line-height: 1.5;
       font-variant-numeric: tabular-nums;
     }
 
-    h1 {
+    .options-container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--card-shadow);
+      padding: 32px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    /* Header */
+    .options-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .options-icon { width: 36px; height: 36px; border-radius: 8px; }
+
+    .options-header h1 {
       font-size: 20px;
       font-weight: 600;
-      margin: 0 0 4px;
+      letter-spacing: -0.025em;
+      color: var(--heading);
     }
 
-    /* Collapsible section headers */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border);
-      padding: 8px 0;
-      margin-top: 20px;
-      margin-bottom: 0;
-      user-select: none;
-      font-size: 15px;
+    /* Sections */
+    .options-section { margin-bottom: 4px; }
+
+    .options-section h2 {
+      font-size: 11px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
     }
 
-    .section-header:hover .chevron {
-      opacity: 0.8;
+    .options-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: -6px 0 14px;
     }
 
-    .section-header .chevron {
-      opacity: 0.45;
-      transition: transform 0.15s ease-out;
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--divider);
+      margin: 24px -32px;
     }
 
-    .section-header.collapsed .chevron {
-      transform: rotate(-90deg);
-    }
-
-    .section-content {
-      max-height: 3000px;
-      overflow: hidden;
-      transition: max-height 0.2s ease-out, opacity 0.15s ease-out, margin 0.2s ease-out;
-      opacity: 1;
-      margin-top: 12px;
-    }
-
-    .section-content.collapsed {
-      max-height: 0;
-      opacity: 0;
-      margin-top: 0;
-    }
-
-    /* Service list: one bordered container, hairline dividers */
-    #default-options {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    #default-options > * + * {
-      border-top: 1px solid var(--border);
-    }
-
+    /* Service rows (generated by options.js) */
     .option {
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-height: 40px;
-      padding: 6px 12px;
-      margin: 0;
+      gap: 12px;
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      transition: background 0.15s ease;
     }
 
-    .option:hover {
-      background-color: var(--surface);
-    }
+    .option:hover { background: var(--row-hover); }
 
-    .option-icon {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
+    .option-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
     .label-container {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: flex-start;
+      gap: 12px;
       flex-grow: 1;
       min-width: 0;
       cursor: pointer;
     }
+
+    /* Keep the icon on the first text line even when a note wraps below */
+    .option-icon { margin-top: 1px; }
 
     .label-text {
       display: flex;
       flex-direction: column;
+      gap: 1px;
       min-width: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
     }
 
     .option-note {
-      font-size: 11px;
+      font-size: 12px;
+      font-weight: 400;
       color: var(--text-muted);
       line-height: 1.4;
     }
 
-    /* Per-service pattern reveal */
-    .reveal-pattern-btn {
+    /* Icon-only buttons: pattern reveal, remove, group expand */
+    .reveal-pattern-btn,
+    .remove-btn,
+    .group-expand-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       padding: 0;
       background: none;
       border: none;
-      border-radius: 6px;
-      color: var(--text-muted);
+      border-radius: 8px;
+      color: var(--text-faint);
       cursor: pointer;
       flex-shrink: 0;
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
-    .reveal-pattern-btn:hover {
-      background-color: var(--border);
+    .reveal-pattern-btn:hover,
+    .group-expand-btn:hover {
+      background: var(--divider);
       color: var(--text);
-      box-shadow: none;
     }
 
-    .pattern-reveal[hidden] {
-      display: none;
+    .remove-btn:hover {
+      background: var(--divider);
+      color: var(--danger);
     }
 
+    /* Per-service pattern reveal — inset chip under the row */
     .pattern-reveal {
       display: flex;
       align-items: center;
       gap: 10px;
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 8px 12px 8px 42px;
+      margin: 0 0 6px;
+      padding: 8px 10px;
+      background: var(--inset-bg);
+      border-radius: 8px;
     }
 
     .pattern-reveal code {
       flex-grow: 1;
-      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
       font-size: 11px;
       word-break: break-all;
       color: var(--text-muted);
     }
 
     .copy-pattern-btn {
-      padding: 3px 10px;
       font-size: 11px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--btn2-border);
+      background: none;
+      color: var(--text-secondary);
+      cursor: pointer;
       flex-shrink: 0;
+      font-family: inherit;
+      transition: border-color 0.15s ease, color 0.15s ease;
     }
+
+    .copy-pattern-btn:hover { color: var(--heading); border-color: var(--text-muted); }
 
     /* Service groups (e.g. Figma) */
-    .group-header .label-container {
-      cursor: pointer;
-    }
-
-    .group-expand-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      padding: 0;
-      margin-left: -6px;
-      background: none;
-      border: none;
-      border-radius: 6px;
-      color: var(--text-muted);
-      cursor: pointer;
-      flex-shrink: 0;
-      box-shadow: none;
-    }
-
-    .group-expand-btn:hover {
-      background-color: var(--border);
-      color: var(--text);
-      box-shadow: none;
-    }
+    .group-expand-btn { margin-left: -4px; }
 
     .group-expand-btn .chevron {
       transform: rotate(-90deg);
-      transition: transform 0.15s ease-out;
+      transition: transform 0.15s ease;
     }
 
-    .service-group.expanded .group-expand-btn .chevron {
-      transform: rotate(0deg);
-    }
+    .service-group.expanded .group-expand-btn .chevron { transform: rotate(0deg); }
 
     .group-members {
-      border-top: 1px solid var(--border);
-      background-color: var(--surface);
+      margin: 2px 0 6px 24px;
+      padding-left: 12px;
+      border-left: 2px solid var(--divider);
     }
 
-    .group-members > * + * {
-      border-top: 1px solid var(--border);
+    .sub-option .option { min-height: 40px; padding-top: 6px; padding-bottom: 6px; }
+
+    .sub-option .label-text { font-weight: 400; }
+
+    .sub-option .pattern-reveal { margin-left: 0; }
+
+    /* Toggle switch (Sanitize It style) */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 24px;
+      flex-shrink: 0;
     }
 
-    .sub-option .option {
-      padding-left: 42px;
+    .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--toggle-bg);
+      transition: background-color 0.2s ease;
+      border-radius: 12px;
     }
 
-    .sub-option .option:hover {
-      background-color: var(--border);
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      background-color: var(--toggle-knob);
+      transition: transform 0.2s ease;
+      border-radius: 50%;
     }
 
-    .sub-option .pattern-reveal {
-      padding-left: 72px;
-    }
+    input:checked + .slider { background-color: var(--toggle-bg-on); }
+
+    input:checked + .slider:before { transform: translateX(16px); }
 
     /* Custom URL form */
-    #custom-url-form {
-      margin-top: 4px;
-    }
-
     .url-input-container {
       display: flex;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
-    /* Match type radio cards */
-    .url-type-selector {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .radio-option {
-      flex: 1;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .radio-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .radio-card {
-      display: flex;
-      flex-direction: column;
-      padding: 8px 12px;
-      background-color: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      transition: border-color 0.15s ease-out;
-    }
-
-    .radio-option input[type="radio"]:checked + .radio-card {
-      border-color: var(--accent);
-    }
-
-    .radio-option input[type="radio"]:focus-visible + .radio-card {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .radio-card:hover {
-      border-color: var(--text-muted);
-    }
-
-    .radio-option input[type="radio"]:checked + .radio-card:hover {
-      border-color: var(--accent);
-    }
-
-    .radio-label {
-      font-weight: 600;
-      font-size: 12.5px;
-      margin-bottom: 1px;
-    }
-
-    .radio-card small {
-      color: var(--text-muted);
-      font-size: 11px;
-    }
-
-    /* Regex help */
-    .regex-help {
-      background-color: var(--surface);
-      border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-    }
-
-    .regex-help h4 {
-      margin: 0 0 10px;
+    input[type="text"], input[type="number"] {
+      padding: 9px 12px;
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      background: var(--input-bg);
+      color: var(--text);
       font-size: 13px;
+      font-family: inherit;
+      flex-grow: 1;
+      min-width: 0;
     }
+
+    input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--radio-checked);
+    }
+
+    input::placeholder { color: var(--text-muted); }
+
+    button {
+      padding: 9px 16px;
+      background: var(--btn-bg);
+      color: var(--btn-text);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 500;
+      flex-shrink: 0;
+      transition: background-color 0.15s ease;
+    }
+
+    button:hover { background: var(--btn-hover); }
+
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-secondary {
+      background: none;
+      color: var(--text);
+      border: 1px solid var(--btn2-border);
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .btn-secondary:hover { background: none; border-color: var(--text-muted); color: var(--heading); }
+
+    /* Match type radios */
+    .url-type-selector { margin-bottom: 4px; }
+
+    .option-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .option-row:hover { background: var(--row-hover); }
+
+    .option-row input[type="radio"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid var(--radio-border);
+      border-radius: 50%;
+      margin-top: 1px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+      position: relative;
+    }
+
+    .option-row input[type="radio"]:checked { border-color: var(--radio-checked); }
+
+    .option-row input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 8px;
+      height: 8px;
+      background: var(--radio-checked);
+      border-radius: 50%;
+    }
+
+    .option-label { display: flex; flex-direction: column; gap: 2px; }
+
+    .option-label strong { font-size: 14px; font-weight: 500; color: var(--text); }
+
+    .option-detail {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Regex help — inset panel, shown while the regex radio is selected */
+    .regex-help {
+      background: var(--inset-bg);
+      padding: 14px;
+      border-radius: 10px;
+      margin: 4px 0 12px;
+    }
+
+    .regex-help h4 { font-size: 13px; color: var(--heading); margin-bottom: 10px; }
 
     .regex-help h5 {
-      margin: 0 0 8px;
-      font-size: 12px;
-      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
     }
 
-    .regex-help ul {
-      margin: 8px 0;
-      padding-left: 18px;
-    }
+    .regex-help ul { margin: 8px 0; padding-left: 18px; }
 
-    .regex-help li {
-      margin-bottom: 6px;
-    }
+    .regex-help li { margin-bottom: 6px; font-size: 12px; }
 
     .regex-help code {
-      background-color: var(--bg);
-      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border: 1px solid var(--divider);
       padding: 1px 5px;
-      border-radius: 4px;
-      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
-      font-size: 11.5px;
+      border-radius: 5px;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+      font-size: 11px;
       word-break: break-all;
     }
 
-    .regex-help small {
-      color: var(--text-muted);
-    }
+    .regex-examples { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--divider); }
 
-    .regex-examples {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
+    .regex-help small { color: var(--text-muted); font-size: 11px; }
 
-    /* Custom URL list: same bordered-container treatment as services */
-    #custom-url-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    #custom-url-list:empty {
-      display: none;
-    }
+    /* Custom URL list */
+    #custom-url-list { list-style: none; }
 
     .custom-url-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 12px;
+      padding: 9px 14px;
       min-height: 40px;
+      border-radius: 10px;
+      transition: background 0.15s ease;
     }
 
-    .custom-url-item:hover {
-      background-color: var(--surface);
-    }
-
-    .custom-url-item + .custom-url-item {
-      border-top: 1px solid var(--border);
-    }
+    .custom-url-item:hover { background: var(--row-hover); }
 
     .url-container {
       display: flex;
@@ -439,14 +493,15 @@ GNU General Public License for more details.
     }
 
     .type-indicator {
-      font-size: 10px;
-      padding: 1px 6px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
+      font-size: 9.5px;
+      padding: 2px 7px;
+      border: 1px solid var(--divider);
+      border-radius: 5px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      background: var(--inset-bg);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.05em;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -455,333 +510,283 @@ GNU General Public License for more details.
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      font-family: ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
       font-size: 12px;
     }
 
     .empty-state {
-      text-align: center;
-      padding: 14px;
+      padding: 10px 14px;
       color: var(--text-muted);
       font-size: 12.5px;
       list-style: none;
-    }
-
-    /* Inputs */
-    input[type="text"], input[type="number"] {
-      padding: 7px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background-color: var(--bg);
-      color: var(--text);
-      font-size: 13px;
-      font-family: inherit;
-      flex-grow: 1;
-    }
-
-    input[type="text"]:focus, input[type="number"]:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    input::placeholder {
-      color: var(--text-muted);
-    }
-
-    button {
-      padding: 7px 14px;
-      background: var(--accent);
-      color: var(--on-accent);
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-family: inherit;
-      font-weight: 500;
-      transition: background-color 0.15s ease-out;
-    }
-
-    button:hover {
-      background: var(--accent-hover);
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* Icon-only buttons (remove) */
-    .remove-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      padding: 0;
-      background: none;
-      border: none;
-      border-radius: 6px;
-      color: var(--text-muted);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .remove-btn:hover {
-      background-color: var(--border);
-      color: var(--danger);
-      box-shadow: none;
     }
 
     /* Inline validation */
     .field-error {
       color: var(--danger);
       font-size: 12px;
-      margin: -6px 0 12px;
+      margin: -4px 14px 10px;
     }
 
-    input.input-error {
-      border-color: var(--danger);
-    }
+    input.input-error { border-color: var(--danger); }
 
     /* Close time */
-    .interval-container {
+    /* Not an interactive row — flush with the section, no hover tint */
+    .inline-setting {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      justify-content: space-between;
+      gap: 16px;
     }
 
-    .interval-container input[type="number"] {
-      width: 64px;
+    .number-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Segmented stepper: [−] value [+], manual entry still works */
+    .number-stepper {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .number-stepper:focus-within { border-color: var(--radio-checked); }
+
+    .stepper-btn {
+      width: 30px;
+      height: 34px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      border-radius: 0;
+      color: var(--text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .stepper-btn:hover { background: var(--row-hover); color: var(--heading); }
+
+    .number-stepper input {
+      width: 48px;
       flex-grow: 0;
+      padding: 7px 4px;
+      border: none;
+      border-radius: 0;
+      text-align: center;
+      background: none;
+      -moz-appearance: textfield;
+      appearance: textfield;
     }
 
-    .interval-container label {
-      font-size: 13px;
-      color: var(--text-muted);
+    .number-stepper input::-webkit-inner-spin-button,
+    .number-stepper input::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
+
+    .number-stepper input:focus { outline: none; }
+
+    .number-input > span { font-size: 12px; color: var(--text-muted); }
 
     /* Backup & restore */
-    .backup-description {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      margin-top: 0;
-    }
+    .backup-buttons { display: flex; gap: 8px; }
 
-    .backup-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* Toast notifications */
+    /* Toast notifications — glassy, matches Sanitize It's save indicator */
     .toast {
       position: fixed;
-      bottom: 20px;
+      top: 20px;
       left: 50%;
-      transform: translate(-50%, 8px);
-      background: var(--toast-bg);
-      color: var(--toast-text);
-      padding: 9px 16px;
-      border-radius: 6px;
+      transform: translate(-50%, -8px) scale(0.96);
+      background: rgba(20, 40, 20, 0.88);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      color: #6FCF6A;
+      padding: 10px 18px;
+      border-radius: 10px;
       font-size: 13px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18),
+                  0 1px 3px rgba(0, 0, 0, 0.12),
+                  inset 0 0.5px 0 rgba(255, 255, 255, 0.08);
+      border: 0.5px solid rgba(111, 207, 106, 0.15);
       opacity: 0;
-      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+      transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 100;
       max-width: 90%;
+      text-align: center;
+      pointer-events: none;
     }
 
     .toast.visible {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translate(-50%, 0) scale(1);
     }
 
     .toast-error {
-      background: var(--danger);
-      color: #ffffff;
+      background: rgba(50, 18, 15, 0.9);
+      color: #f28b82;
+      border-color: rgba(242, 139, 130, 0.2);
     }
 
     /* Links */
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    a { color: var(--link); text-decoration: none; transition: color 0.15s ease; }
 
-    a:hover {
-      text-decoration: underline;
-      color: var(--accent-hover);
-    }
-
-    /* Toggle switch */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 36px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: var(--track-off);
-      transition: background-color 0.15s ease-out;
-      border-radius: 20px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 2px;
-      bottom: 2px;
-      background-color: #ffffff;
-      transition: transform 0.15s ease-out, background-color 0.15s ease-out;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--accent);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(16px);
-      background-color: var(--on-accent);
-    }
+    a:hover { color: var(--link-hover); }
 
     /* Keyboard focus */
     .switch input:focus-visible + .slider,
     button:focus-visible,
-    a:focus-visible {
-      outline: 2px solid var(--accent);
+    a:focus-visible,
+    .option-row input[type="radio"]:focus-visible {
+      outline: 2px solid var(--radio-checked);
       outline-offset: 2px;
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition: none !important;
-      }
+      *, *::before, *::after { transition: none !important; }
     }
 
     /* Footer */
     .footer {
       margin-top: 24px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      border-top: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
+      color: var(--text-faint);
+      flex-wrap: wrap;
     }
+
+    .footer-sep { color: var(--sep); }
   </style>
 
 </head>
 <body>
-  <h1>TabCloser</h1>
+  <div class="options-container">
+    <div class="options-header">
+      <img src="images/icon48.png" alt="" class="options-icon">
+      <h1>TabCloser</h1>
+    </div>
 
-  <div class="section-header" data-section="services">
-    <span>Default Services</span>
-    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </div>
-  <div class="section-content" data-section="services">
-    <div id="default-options"></div>
-  </div>
+    <div class="options-section">
+      <h2>Default Services</h2>
+      <p class="options-description">Toggle which services TabCloser watches for leftover tabs.</p>
+      <div id="default-options"></div>
+    </div>
 
-  <div class="section-header" data-section="custom">
-    <span>Custom URLs</span>
-    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </div>
-  <div class="section-content" data-section="custom">
-    <form id="custom-url-form">
-      <div class="url-input-container">
-        <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
-        <button type="submit">Add URL</button>
-      </div>
-      <div class="field-error" id="custom-url-error" hidden></div>
+    <hr class="section-divider">
 
-      <div class="url-type-selector">
-        <label class="radio-option">
-          <input type="radio" name="url-type" id="url-type-exact" value="exact" checked>
-          <div class="radio-card">
-            <span class="radio-label">Exact Match</span>
-            <small>Matches the URL exactly as entered</small>
-          </div>
-        </label>
+    <div class="options-section">
+      <h2>Custom URLs</h2>
+      <form id="custom-url-form">
+        <div class="url-input-container">
+          <input type="text" id="custom-url" placeholder="Enter URL or regex pattern" required>
+          <button type="submit">Add</button>
+        </div>
+        <div class="field-error" id="custom-url-error" hidden></div>
 
-        <label class="radio-option">
-          <input type="radio" name="url-type" id="url-type-regex" value="regex">
-          <div class="radio-card">
-            <span class="radio-label">Regular Expression</span>
-            <small>Matches URLs using regex pattern</small>
-          </div>
-        </label>
-      </div>
+        <div class="url-type-selector">
+          <label class="option-row">
+            <input type="radio" name="url-type" id="url-type-exact" value="exact" checked>
+            <span class="option-label">
+              <strong>Exact match</strong>
+              <span class="option-detail">Matches the URL exactly as entered</span>
+            </span>
+          </label>
 
-      <div class="regex-help" id="regex-help" style="display: none;">
-        <h4>Regular Expression Guide</h4>
-
-        <h5>Common Patterns:</h5>
-        <ul>
-          <li><code>^https?://localhost:\d+/.*</code> - Any localhost with port number</li>
-          <li><code>^https?://.*\.example\.com/.*</code> - Any subdomain of example.com</li>
-          <li><code>^https?://.*\.zoom\.us/j/\d+.*#success$</code> - Zoom success pages</li>
-          <li><code>^https?://app\.myservice\.com/session/[a-f0-9-]+$</code> - Dynamic session IDs</li>
-        </ul>
-
-        <div class="regex-examples">
-          <h5>Regex Symbols:</h5>
-          <ul>
-            <li><code>^</code> - Start of URL</li>
-            <li><code>$</code> - End of URL</li>
-            <li><code>.*</code> - Match any characters</li>
-            <li><code>\d+</code> - Match numbers (like port 3000, 8080)</li>
-            <li><code>[a-f0-9-]+</code> - Match specific characters (like UUIDs)</li>
-            <li><code>\.</code> - Match literal dot (escape with \)</li>
-          </ul>
+          <label class="option-row">
+            <input type="radio" name="url-type" id="url-type-regex" value="regex">
+            <span class="option-label">
+              <strong>Regular expression</strong>
+              <span class="option-detail">Matches URLs using a regex pattern</span>
+            </span>
+          </label>
         </div>
 
-        <small><strong>Tip:</strong> Use <code>\</code> to escape special characters. Test your patterns carefully!</small>
+        <div class="regex-help" id="regex-help" style="display: none;">
+          <h4>Regular Expression Guide</h4>
+
+          <h5>Common Patterns</h5>
+          <ul>
+            <li><code>^https?://localhost:\d+/.*</code> - Any localhost with port number</li>
+            <li><code>^https?://.*\.example\.com/.*</code> - Any subdomain of example.com</li>
+            <li><code>^https?://.*\.zoom\.us/j/\d+.*#success$</code> - Zoom success pages</li>
+            <li><code>^https?://app\.myservice\.com/session/[a-f0-9-]+$</code> - Dynamic session IDs</li>
+          </ul>
+
+          <div class="regex-examples">
+            <h5>Regex Symbols</h5>
+            <ul>
+              <li><code>^</code> - Start of URL</li>
+              <li><code>$</code> - End of URL</li>
+              <li><code>.*</code> - Match any characters</li>
+              <li><code>\d+</code> - Match numbers (like port 3000, 8080)</li>
+              <li><code>[a-f0-9-]+</code> - Match specific characters (like UUIDs)</li>
+              <li><code>\.</code> - Match literal dot (escape with \)</li>
+            </ul>
+          </div>
+
+          <small><strong>Tip:</strong> Use <code>\</code> to escape special characters. Test your patterns carefully!</small>
+        </div>
+      </form>
+      <ul id="custom-url-list"></ul>
+    </div>
+
+    <hr class="section-divider">
+
+    <div class="options-section">
+      <h2>Behavior</h2>
+      <div class="inline-setting">
+        <span class="option-label">
+          <strong>Close time</strong>
+          <span class="option-detail">How long a matching tab stays open before closing</span>
+        </span>
+        <span class="number-input">
+          <span class="number-stepper">
+            <button type="button" class="stepper-btn" data-step="-1" aria-label="Decrease close time">&minus;</button>
+            <input type="number" id="check-interval" min="1" value="15">
+            <button type="button" class="stepper-btn" data-step="1" aria-label="Increase close time">+</button>
+          </span>
+          <span><label for="check-interval">sec</label></span>
+        </span>
       </div>
-    </form>
-    <ul id="custom-url-list"></ul>
-  </div>
-
-  <div class="section-header" data-section="interval">
-    <span>Close Time</span>
-    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </div>
-  <div class="section-content" data-section="interval">
-    <div class="interval-container">
-      <input type="number" id="check-interval" min="1" value="15">
-      <label for="check-interval">Seconds</label>
     </div>
-  </div>
 
-  <div class="section-header" data-section="backup">
-    <span>Backup &amp; Restore</span>
-    <svg class="chevron" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </div>
-  <div class="section-content" data-section="backup">
-    <p class="backup-description">Export your custom URLs, service toggles, and close time to a file, then import it into TabCloser on another browser or profile. Importing merges custom URLs with your existing list.</p>
-    <div class="backup-buttons">
-      <button type="button" id="export-settings">Export Settings</button>
-      <button type="button" id="import-settings">Import Settings</button>
+    <hr class="section-divider">
+
+    <div class="options-section">
+      <h2>Backup &amp; Restore</h2>
+      <p class="options-description">Export your custom URLs, service toggles, and close time to a file, then import it into TabCloser on another browser or profile. Importing merges custom URLs with your existing list.</p>
+      <div class="backup-buttons">
+        <button type="button" id="export-settings" class="btn-secondary">Export Settings</button>
+        <button type="button" id="import-settings" class="btn-secondary">Import Settings</button>
+      </div>
+      <input type="file" id="import-file" accept=".json,application/json" style="display: none;">
     </div>
-    <input type="file" id="import-file" accept=".json,application/json" style="display: none;">
-  </div>
 
-  <footer class="footer">
-    Made By <a href="https://seth.social" target="_blank">Seth Cottle</a> &nbsp;|&nbsp; Learn more at <a href="https://tinyextensions.com/tabcloser" target="_blank">TinyExtensions.com</a> &nbsp;|&nbsp; <a href="https://github.com/sethcottle/tabcloser/releases" target="_blank" id="version-link"></a>
-  </footer>
+    <footer class="footer">
+      <span>Built by <a href="https://seth.social" target="_blank">Seth Cottle</a></span>
+      <span class="footer-sep">&middot;</span>
+      <a href="https://tinyextensions.com/tabcloser" target="_blank">TinyExtensions.com</a>
+      <span class="footer-sep">&middot;</span>
+      <a href="https://github.com/sethcottle/tabcloser" target="_blank">GitHub</a>
+      <span class="footer-sep">&middot;</span>
+      <a href="https://github.com/sethcottle/tabcloser/releases" target="_blank" id="version-link"></a>
+    </footer>
+  </div>
 
   <script src="patterns.js"></script>
   <script src="options.js"></script>
