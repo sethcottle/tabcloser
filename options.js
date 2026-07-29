@@ -440,6 +440,11 @@ async function loadCheckInterval() {
   document.getElementById('check-interval').value = interval;
 }
 
+async function loadShowCountdown() {
+  const { showCountdown = true } = await api.storage.sync.get(['showCountdown']);
+  document.getElementById('show-countdown').checked = showCountdown;
+}
+
 async function saveCheckInterval() {
   const interval = parseInt(document.getElementById('check-interval').value, 10);
   if (interval > 0) {
@@ -450,13 +455,13 @@ async function saveCheckInterval() {
 }
 
 async function exportSettings() {
-  const { customUrls = [], disabledUrls = [], interval = 15 } =
-    await api.storage.sync.get(['customUrls', 'disabledUrls', 'interval']);
+  const { customUrls = [], disabledUrls = [], interval = 15, showCountdown = true } =
+    await api.storage.sync.get(['customUrls', 'disabledUrls', 'interval', 'showCountdown']);
   const payload = {
     app: 'TabCloser',
     settingsVersion: 1,
     exportedAt: new Date().toISOString(),
-    settings: { customUrls, disabledUrls, interval },
+    settings: { customUrls, disabledUrls, interval, showCountdown },
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -541,16 +546,21 @@ async function importSettings(file) {
   if (interval > 0) {
     updates.interval = interval;
   }
+  if (typeof settings.showCountdown === 'boolean') {
+    updates.showCountdown = settings.showCountdown;
+  }
 
   if (!await saveSync(updates)) return;
 
   renderDefaultOptions();
   renderCustomUrls();
   loadCheckInterval();
+  loadShowCountdown();
   const parts = [`${added} custom URL${added === 1 ? '' : 's'} added`];
   if (skipped > 0) parts.push(`${skipped} invalid entr${skipped === 1 ? 'y' : 'ies'} skipped`);
   if (updates.disabledUrls) parts.push('service toggles restored');
   if (updates.interval) parts.push('close time restored');
+  if ('showCountdown' in updates) parts.push('badge preference restored');
   showToast(`Import complete: ${parts.join(', ')}.`);
 }
 
@@ -567,9 +577,13 @@ document.addEventListener('DOMContentLoaded', () => {
   renderDefaultOptions();
   renderCustomUrls();
   loadCheckInterval();
+  loadShowCountdown();
 
   document.getElementById('custom-url-form').addEventListener('submit', saveCustomUrl);
   document.getElementById('check-interval').addEventListener('change', saveCheckInterval);
+  document.getElementById('show-countdown').addEventListener('change', (event) => {
+    saveSync({ showCountdown: event.target.checked });
+  });
 
   // Close time +/- steppers; manual typing still goes through the change
   // listener above

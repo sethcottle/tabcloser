@@ -531,13 +531,17 @@ GNU General Public License for more details.
     input.input-error { border-color: var(--danger); }
 
     /* Close time */
-    /* Not an interactive row — flush with the section, no hover tint */
+    /* Flush with the section, no hover tint */
     .inline-setting {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
     }
+
+    .inline-setting + .inline-setting { margin-top: 16px; }
+
+    label.inline-setting { cursor: pointer; }
 
     .number-input {
       display: flex;
@@ -763,6 +767,17 @@ GNU General Public License for more details.
           <span><label for="check-interval">sec</label></span>
         </span>
       </div>
+
+      <label class="inline-setting">
+        <span class="option-label">
+          <strong>Countdown badge</strong>
+          <span class="option-detail">Show seconds until the next close on the toolbar icon. The pause marker still shows while TabCloser is paused.</span>
+        </span>
+        <span class="switch">
+          <input type="checkbox" id="show-countdown" role="switch" aria-label="Show countdown badge on the toolbar icon">
+          <span class="slider"></span>
+        </span>
+      </label>
     </div>
 
     <hr class="section-divider">

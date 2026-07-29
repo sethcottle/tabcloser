@@ -247,6 +247,14 @@ async function updateBadge() {
       await api.action.setBadgeText({ text: '||' });
       return;
     }
+    // The countdown can be turned off in options; the pause marker above is
+    // deliberate user state and always shows
+    const { showCountdown = true } = await api.storage.sync.get(['showCountdown']);
+    if (!showCountdown) {
+      stopBadgeTicker();
+      await api.action.setBadgeText({ text: '' });
+      return;
+    }
     const pendingCloses = await getPendingCloses();
     const deadlines = Object.values(pendingCloses).map((p) => p.deadline);
     if (deadlines.length === 0) {
@@ -316,6 +324,9 @@ api.storage.onChanged.addListener((changes, areaName) => {
   // so a migrated list produces no further writes.
   if (areaName === 'sync' && 'disabledUrls' in changes) {
     migrateDisabledUrls();
+  }
+  if (areaName === 'sync' && 'showCountdown' in changes) {
+    updateBadge();
   }
   if (debug && areaName === 'sync') {
     console.log('Storage changes:', changes);
