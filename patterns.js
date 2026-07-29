@@ -38,7 +38,7 @@ const predefinedUrlPatterns = [
   { label: 'Figjam Files', pattern: '^https?://(?:www\\.)?figma\\.com/board/', icon: 'figma-figjam.svg', group: 'Figma' },
   { label: 'Linear', pattern: '^https?://linear\\.app/(?!integrations(/|$)|settings(/|$)).*\\?noRedirect=1$', icon: 'linear.svg' },
   { label: 'Microsoft Teams', pattern: '^https?://teams\\.microsoft\\.com/dl/launcher/.*', icon: 'teams.svg' },
-  { label: 'Notion', pattern: '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true', icon: 'notion.svg' },
+  { label: 'Notion', pattern: '^https?://(app\\.notion\\.com|www\\.notion\\.so)/native/.*[?&]deepLinkOpenNewTab=true', icon: 'notion.svg' },
   { label: 'Slack', pattern: '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|files\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace|files|files-pri)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/', icon: 'slack.svg' },
   { label: 'Spotify', pattern: '^https?://open\\.spotify\\.com', icon: 'spotify.svg',
     note: 'Closes all open.spotify.com pages. If you listen in the Spotify web player, leave this off.' },
@@ -62,6 +62,9 @@ const legacyPatternMap = {
   // 4.x AWS pattern, before the login-success.html dot was escaped
   '^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success.html':
     '^https://[a-z0-9-]+\\.awsapps\\.com/start/user-consent/login-success\\.html',
+  // 4.x Notion pattern, before app.notion.com was added (#20)
+  '^https?://www\\.notion\\.so/native/.*&deepLinkOpenNewTab=true':
+    '^https?://(app\\.notion\\.com|www\\.notion\\.so)/native/.*[?&]deepLinkOpenNewTab=true',
   // 4.3.0 Slack pattern, before files.slack.com / file paths were excluded (#18)
   '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/':
     '^https?://(?!(app\\.slack\\.com|slack\\.com|api\\.slack\\.com|files\\.slack\\.com|.*\\/(admin|customize|account|apps|marketplace|files|files-pri)(\\/|$)|.*\\/home(\\/|$)))[a-z0-9-]+\\.(enterprise\\.)?slack\\.com/',
